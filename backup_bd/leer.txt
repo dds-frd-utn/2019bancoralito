@@ -1,0 +1,10 @@
+el .sql es un script para generar la base de datos. Es código MySQL.
+Pueden copiar el código y pegarlo en la consola de phpMyAdmin, y despues conectarse desde SQLYog para manejar la bd 
+(ver las tablas, hacer consultas, insertar datos).
+
+En SQLyog van a New Conection... le ponen un nombre,
+server: localhost
+usuario: root
+pass: en blanco
+base de datos: dds_tbt (lo pueden dejar vacío, y asume que se conectan a todas las bd que tenga el servidor)
+apretan "Save" para que guarde la configuración y se conectan :D
