@@ -61,9 +61,10 @@ public class ClienteRest {
     
     //obtener una entidad por id
     @GET
-    @Path("/{id}")
+    @Path("/{idCliente}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Cliente findById(@PathParam("id")long id){
-        return ejbClienteFacade.find(id);
+    public Cliente findById(@PathParam("idCliente")int idCliente){
+        
+        return ejbClienteFacade.find(idCliente);
     }
 }

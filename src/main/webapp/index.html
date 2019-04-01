@@ -4,8 +4,17 @@
     <head>
         <title>Start Page</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!--<script type="text/javascript" src="grupo_tbt/src/main/webapp/jquery_3-3-1/jquery-3.3.1.min.js"></script>-->
+        <script type="text/javascript" src="jquery-3.3.1.min.js"></script>
     </head>
     <body>
         <h1>Hello World!</h1>
+        <div>
+            <form method="GET" action="/rest/cliente"> 
+                <label>id del cliente</label>
+                <input type="text" value="" name="idCliente"/>
+                <input type="submit" value="Buscar" />
+            </form>
+        </div>
     </body>
 </html>
