@@ -1,5 +1,9 @@
 C:\xampp\htdocs\grupo_tbt\src\main\java\utn\frd\grupo_tbt\entity\Cliente.java
+C:\xampp\htdocs\grupo_tbt\src\main\java\utn\frd\grupo_tbt\entity\Cuenta.java
 C:\xampp\htdocs\grupo_tbt\src\main\java\utn\frd\grupo_tbt\sessions\AbstractFacade.java
+C:\xampp\htdocs\grupo_tbt\src\main\java\utn\frd\grupo_tbt\sessions\CuentaFacade.java
 C:\xampp\htdocs\grupo_tbt\src\main\java\utn\frd\grupo_tbt\rest\services\ClienteRest.java
+C:\xampp\htdocs\grupo_tbt\src\main\java\utn\frd\grupo_tbt\entity\Movimiento.java
+C:\xampp\htdocs\grupo_tbt\src\main\java\utn\frd\grupo_tbt\sessions\MovimientoFacade.java
 C:\xampp\htdocs\grupo_tbt\src\main\java\utn\frd\grupo_tbt\rest\services\ApplicationConfig.java
 C:\xampp\htdocs\grupo_tbt\src\main\java\utn\frd\grupo_tbt\sessions\ClienteFacade.java

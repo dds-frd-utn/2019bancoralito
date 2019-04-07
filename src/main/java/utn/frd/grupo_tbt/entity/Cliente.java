@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Cliente.findByNombre", query = "SELECT c FROM Cliente c WHERE c.nombre = :nombre")
     , @NamedQuery(name = "Cliente.findByApellido", query = "SELECT c FROM Cliente c WHERE c.apellido = :apellido")
     , @NamedQuery(name = "Cliente.findByEmail", query = "SELECT c FROM Cliente c WHERE c.email = :email")
-    , @NamedQuery(name = "Cliente.findByPassword", query = "SELECT c FROM Cliente c WHERE c.password = :password")
+    , @NamedQuery(name = "Cliente.findByContrasenia", query = "SELECT c FROM Cliente c WHERE c.contrasenia = :contrasenia")
     , @NamedQuery(name = "Cliente.findByUsuario", query = "SELECT c FROM Cliente c WHERE c.usuario = :usuario")})
 public class Cliente implements Serializable {
 
@@ -52,8 +52,8 @@ public class Cliente implements Serializable {
     @Column(name = "email")
     private String email;
     @Size(max = 50)
-    @Column(name = "password")
-    private String password;
+    @Column(name = "contrasenia")
+    private String contrasenia;
     @Size(max = 15)
     @Column(name = "usuario")
     private String usuario;
@@ -97,12 +97,12 @@ public class Cliente implements Serializable {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getContrasenia() {
+        return contrasenia;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setContrasenia(String contrasenia) {
+        this.contrasenia = contrasenia;
     }
 
     public String getUsuario() {

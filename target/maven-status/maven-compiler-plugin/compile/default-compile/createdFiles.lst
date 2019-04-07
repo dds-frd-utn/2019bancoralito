@@ -1,6 +1,6 @@
 utn\frd\grupo_tbt\sessions\ClienteFacade.class
+utn\frd\grupo_tbt\rest\services\ApplicationConfig.class
 utn\frd\grupo_tbt\rest\services\ClienteRest.class
 utn\frd\grupo_tbt\sessions\AbstractFacade.class
 utn\frd\grupo_tbt\entity\Cliente_.class
 utn\frd\grupo_tbt\entity\Cliente.class
-utn\frd\grupo_tbt\rest\services\ApplicationConfig.class
