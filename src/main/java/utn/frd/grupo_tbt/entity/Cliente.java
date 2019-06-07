@@ -6,6 +6,7 @@
 package utn.frd.grupo_tbt.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +16,9 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -32,7 +36,11 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Cliente.findByApellido", query = "SELECT c FROM Cliente c WHERE c.apellido = :apellido")
     , @NamedQuery(name = "Cliente.findByEmail", query = "SELECT c FROM Cliente c WHERE c.email = :email")
     , @NamedQuery(name = "Cliente.findByContrasenia", query = "SELECT c FROM Cliente c WHERE c.contrasenia = :contrasenia")
-    , @NamedQuery(name = "Cliente.findByUsuario", query = "SELECT c FROM Cliente c WHERE c.usuario = :usuario")})
+    , @NamedQuery(name = "Cliente.findByUsuario", query = "SELECT c FROM Cliente c WHERE c.usuario = :usuario")
+    , @NamedQuery(name = "Cliente.findByFechaNacimiento", query = "SELECT c FROM Cliente c WHERE c.fechaNacimiento = :fechaNacimiento")
+    , @NamedQuery(name = "Cliente.findByIdTipoCliente", query = "SELECT c FROM Cliente c WHERE c.idTipoCliente = :idTipoCliente")
+    , @NamedQuery(name = "Cliente.findByDu", query = "SELECT c FROM Cliente c WHERE c.du = :du")
+    , @NamedQuery(name = "Cliente.findByDireccion", query = "SELECT c FROM Cliente c WHERE c.direccion = :direccion")})
 public class Cliente implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,18 +59,44 @@ public class Cliente implements Serializable {
     @Size(max = 50)
     @Column(name = "email")
     private String email;
-    @Size(max = 50)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
     @Column(name = "contrasenia")
     private String contrasenia;
-    @Size(max = 15)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 15)
     @Column(name = "usuario")
     private String usuario;
+    @Column(name = "fechaNacimiento")
+    @Temporal(TemporalType.DATE)
+    private Date fechaNacimiento;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "idTipoCliente")
+    private int idTipoCliente;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "du")
+    private int du;
+    @Size(max = 50)
+    @Column(name = "direccion")
+    private String direccion;
 
     public Cliente() {
     }
 
     public Cliente(Integer idCliente) {
         this.idCliente = idCliente;
+    }
+
+    public Cliente(Integer idCliente, String contrasenia, String usuario, int idTipoCliente, int du) {
+        this.idCliente = idCliente;
+        this.contrasenia = contrasenia;
+        this.usuario = usuario;
+        this.idTipoCliente = idTipoCliente;
+        this.du = du;
     }
 
     public Integer getIdCliente() {
@@ -111,6 +145,38 @@ public class Cliente implements Serializable {
 
     public void setUsuario(String usuario) {
         this.usuario = usuario;
+    }
+
+    public Date getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(Date fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public int getIdTipoCliente() {
+        return idTipoCliente;
+    }
+
+    public void setIdTipoCliente(int idTipoCliente) {
+        this.idTipoCliente = idTipoCliente;
+    }
+
+    public int getDu() {
+        return du;
+    }
+
+    public void setDu(int du) {
+        this.du = du;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 
     @Override
