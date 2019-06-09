@@ -17,13 +17,20 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import utn.frd.grupo_tbt.entity.Cliente;
 import utn.frd.grupo_tbt.sessions.ClienteFacade;
+/*
+import javax.persistence.Query;
+import javax.persistence.EntityManager;
+//import org.json.simple.JSONObject;
+*/
 /**
 *
 * @author Brian
 */
+
 @Path("/cliente")
 public class ClienteRest {
     @EJB
+    //private EntityManager em;
     private ClienteFacade ejbClienteFacade;
     //obtener todas las entidades
     @GET
@@ -53,9 +60,15 @@ public class ClienteRest {
     }
     //obtener una entidad por id
     @GET
-    @Path("/{id}")
+    @Path("/{du}")
     @Produces({MediaType.APPLICATION_JSON})
-        public Cliente findById(@PathParam("id")int id){
-        return ejbClienteFacade.find(id);
+        public Cliente findById(@PathParam("du")int du){
+            /*
+            Query query = em.createNamedQuery("findByDu",Cliente.class);
+            query.setParameter("du", du);
+            Object result = query.getSingleResult();
+        */
+            
+        return ejbClienteFacade.find(du);
     }
 }
