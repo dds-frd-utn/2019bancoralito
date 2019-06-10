@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package utn.frd.grupo_tbt.rest.services;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
@@ -17,8 +18,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import utn.frd.grupo_tbt.entity.Cliente;
 import utn.frd.grupo_tbt.sessions.ClienteFacade;
-/*
 import javax.persistence.Query;
+import javax.persistence.NoResultException;
+import javax.json.JsonObject;
+import javax.json.JsonString;
+import javax.json.Json;
+/*
 import javax.persistence.EntityManager;
 //import org.json.simple.JSONObject;
 */
@@ -30,8 +35,8 @@ import javax.persistence.EntityManager;
 @Path("/cliente")
 public class ClienteRest {
     @EJB
-    //private EntityManager em;
     private ClienteFacade ejbClienteFacade;
+    
     //obtener todas las entidades
     @GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -62,13 +67,31 @@ public class ClienteRest {
     @GET
     @Path("/{du}")
     @Produces({MediaType.APPLICATION_JSON})
-        public Cliente findById(@PathParam("du")int du){
-            /*
-            Query query = em.createNamedQuery("findByDu",Cliente.class);
-            query.setParameter("du", du);
-            Object result = query.getSingleResult();
-        */
+        public JsonObject findByDu(@PathParam("du")int du){
+            try{
+                Cliente resultado;
+                Query query = ejbClienteFacade.getEntityManager().createNamedQuery("Cliente.findByDu",Cliente.class);
+                query.setParameter("du", du);
+                
+                resultado = (Cliente)query.getSingleResult();
+                
+                JsonObject jsonResultado = Json.createObjectBuilder()
+                                        .add("du", resultado.getDu())
+                                        .add("nombre", resultado.getNombre())
+                                        .add("apellido", resultado.getApellido())
+                                        .add("email", resultado.getEmail())
+                                        .add("fechaNacimiento", resultado.getFechaNacimiento().toString())
+                                        .add("usuario", resultado.getUsuario())
+                                        .build();
+                return jsonResultado;
+            } catch(NoResultException e) {
+                 JsonObject jsonError = Json.createObjectBuilder()
+                                        .add("flag_error", 1)
+                                        .add("error", "No encontrado").build();
+                
+                return jsonError;
+            }
             
-        return ejbClienteFacade.find(du);
+            
     }
 }

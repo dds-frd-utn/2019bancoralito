@@ -21,19 +21,12 @@ public class ClienteFacade extends AbstractFacade<Cliente> {
     private EntityManager em;
 
     @Override
-    protected EntityManager getEntityManager() {
+    public EntityManager getEntityManager() {
         return em;
     }
 
     public ClienteFacade() {
         super(Cliente.class);
     }
-    /*
-    public String findByDu(int du){
-        javax.persistence.Query q = getEntityManager().createNamedQuery("findByDu",Cliente.class);
-        q.setParameter("du", du);
-        Object result = q.getSingleResult();
-        return result.toString();
-    }
-*/
+
 }
