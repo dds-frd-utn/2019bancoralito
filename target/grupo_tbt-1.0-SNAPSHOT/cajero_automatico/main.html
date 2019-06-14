@@ -7,6 +7,7 @@ and open the template in the editor.
 <html>
     <head>
         <title>CAJERO AUTOMATICO BANCO RALITO</title>
+        <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
         <meta charset="UTF-8">
         <link href="css/all.css" rel="stylesheet">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,37 +19,34 @@ and open the template in the editor.
             header{
                 height: 4em;
             }
-            .opcion-menu{
-                height: 5em;
-                width: 15em;
-                background-color: blue;
-                margin: 10px 0;
+            label{
+                opacity: initial;
+                color: black;
             }
         </style>
     </head>
     <body>
+        <div class="header-cajero">
+            <div class="row">
+                <h4>Bienvenido</h4>
+            </div>
+            <div class="row">
+                <h4>[Información adicional]</h4>
+            </div>
+        </div>
+        <br>
         <div class="container">
-            <div class="row">
-                <header>
-                    <h4>Bienvenido</h4>
-                </header>
-            </div>
-            <div class="row">
-                <header>
-                    <h4>[Información adicional]</h4>
-                </header>
+            <div class="d-flex justify-content-between">
+                <div class="p-3 opcion-menu" id="1"><label>Consulta de saldo</label></div>
+                <div class="p-3 opcion-menu" id="2"><label>Últimos 10 movimientos</label></div>
             </div>
             <div class="d-flex justify-content-between">
-                <div class="p-2 opcion-menu" id="1">Flex item 1</div>
-                <div class="p-2 opcion-menu" id="2">Flex item 2</div>
+                <div class="p-3 opcion-menu"  id="3"><label>Realizar transferencia</label></div>
+                <div class="p-3 opcion-menu"  id="4"><label>Realizar pago</label></div>
             </div>
             <div class="d-flex justify-content-between">
-                <div class="p-2 opcion-menu"  id="3">Flex item 3</div>
-                <div class="p-2 opcion-menu"  id="4">Flex item 4</div>
-            </div>
-            <div class="d-flex justify-content-between">
-                <div class="p-2 opcion-menu"  id="5">Flex item 5</div>
-                <div class="p-2 opcion-menu"  id="6">Flex item 6</div>
+                <div class="p-3 opcion-menu"  id="5"><label>Cambio de clave</label></div>
+                <div class="p-3 opcion-menu"  id="6"><label>Salir</label></div>
             </div>
 
             
@@ -56,7 +54,7 @@ and open the template in the editor.
         <script>
             $(".opcion-menu").click(function(event){
                 event.preventDefault();
-                let accion = $(this).attr("id");
+                let accion = $(this).find("label").text();
                 alert("Seleccionó la acción "+accion);
             });
         </script>

@@ -9,10 +9,25 @@ and open the template in the editor.
 */
 body{
     
-    background-image: url("../img/background-pesos.jpg");
+    background-image: url("../img/bg-dollar.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     height: 100vh;
+}
+.opcion-menu{
+    height: 5em;
+    width: 25em;
+    background-color:lavender;
+    border-radius: 10px;
+    opacity: 0.85;
+    margin: 10px 0;
+}
+.header-cajero{
+    margin-bottom: 5vh;
+    width: 100%;
+    padding: 2vh 10vh;
+    background-color:lavender;
+    opacity: 0.85;
 }
 
