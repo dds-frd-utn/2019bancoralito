@@ -32,7 +32,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 /**
 *
 * @author Brian

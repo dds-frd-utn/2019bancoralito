@@ -25,7 +25,6 @@ import utn.frd.grupo_tbt.sessions.MovimientoFacade;
  * @author Brian
 */
 @Path("/movimiento")
-
 public class MovimientoRest {
     @EJB
     private MovimientoFacade ejbMovimientoFacade;
