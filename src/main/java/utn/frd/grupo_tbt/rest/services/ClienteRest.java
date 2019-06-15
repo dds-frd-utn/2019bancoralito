@@ -33,15 +33,6 @@ import java.net.URL;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-
-//import jdk.nashorn.internal.parser.JSONParser;
-//import org.json.simple.parser.JSONParser;
-//import org.json.simple.parser.ParseException;
-/*
-import javax.persistence.EntityManager;
-//import org.json.simple.JSONObject;
-*/
 /**
 *
 * @author Brian
@@ -49,51 +40,9 @@ import javax.persistence.EntityManager;
 
 @Path("/cliente")
 public class ClienteRest {
-    @EJB
-    private ClienteFacade ejbClienteFacade;
-    
-    //obtener todas las entidades
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public List<Cliente> findAll(){
-    return ejbClienteFacade.findAll();
-    }
-    //crear entidades
-    @POST
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.TEXT_PLAIN})
-    public String create(String cliente) throws JSONException, MalformedURLException, IOException{
-//        JSONParser parser = new JSONParser();
-        JSONObject jsonCliente = new JSONObject(cliente);
-        String du = jsonCliente.get("du").toString();
-        
-        URL url = new URL("http://lsi.no-ip.org:8282/esferopolis/api/ciudadano/"+du);
-//        return url.getPath(); hasta acá anda
-       
-        /*
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-        
-        int status = con.getResponseCode();
-        StringBuffer content;
-        try (BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()))) {
-                String inputLine;
-                content = new StringBuffer();
-            //        StringBuffer append;
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
-            }
-        }
-        //jsonRespuesta = mandarHttpRequest("GET",url);
-        String texto = content.toString();
-*/
-        //codigo sergio
-//        url = new URL( restURL );
-    //hardcodeo el parametro vacio
-        JSONObject jsonParam = new JSONObject();
-        
+    public String enviarHttpRequest(String urlParam, String method, JSONObject jsonParam){
         try {
+            URL url = new URL(urlParam);
 
             HttpURLConnection urlConnection = null;
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -115,12 +64,9 @@ public class ClienteRest {
 
 
             StringBuilder sBuilder;
-                InputStream inputStream;
-                inputStream= urlConnection.getInputStream();
-                /*
-            }catch(IOException e){
-                return e.getMessage(); //está saliendo por acá
-            } */
+            InputStream inputStream;
+            inputStream= urlConnection.getInputStream();
+            
             BufferedReader bReader = new BufferedReader(new InputStreamReader(inputStream, "utf-8"), 5);
             sBuilder = new StringBuilder();
             String line = null;
@@ -129,15 +75,38 @@ public class ClienteRest {
             }
             String texto = sBuilder.toString();
             return texto;
-        } catch (Exception e) {
-           e.printStackTrace();
-           return e.getLocalizedMessage();
+        } catch (IOException e) {
+           return e.getMessage();
         }
-        //fin codigo sergio
-        //Player ronaldo = new ObjectMapper().readValue(jsonString, Player.class);
+    }
+    @EJB
+    
+    private ClienteFacade ejbClienteFacade;
+    //obtener todas las entidades
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Cliente> findAll(){
+    return ejbClienteFacade.findAll();
+    }
+    //crear entidades
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.TEXT_PLAIN})
+    public String create(String cliente) throws JSONException, MalformedURLException, IOException{
+        try{
+            JSONObject jsonCliente = new JSONObject(cliente);
+            String du = jsonCliente.get("du").toString();
+            String url = "http://lsi.no-ip.org:8282/esferopolis/api/ciudadano/"+du;
 
+            //hardcodeo el parametro vacio
+            JSONObject jsonParam = new JSONObject();
+
+            return this.enviarHttpRequest(url, "GET", jsonParam);
+//            return (String)"Hola";
+        }catch(Exception e){
+            return e.getMessage();
+        }
         /*
-        JSONObject jsonRespuesta = (JSONObject) parser.parse(texto);
         
         if((int)jsonRespuesta.get("estadoCrediticio") <3){
             //ejbClienteFacade.crear(cliente);
@@ -158,6 +127,8 @@ public class ClienteRest {
         //ejbClienteFacade.create(cliente);
         //crear cuenta con el idCliente que recien generamos
     }
+    
+    
     //actualizar entidades
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
