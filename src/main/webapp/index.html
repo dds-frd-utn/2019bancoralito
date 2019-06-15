@@ -22,6 +22,7 @@
 
   <!-- Theme CSS - Includes Bootstrap -->
   <link href="css/creative.css" rel="stylesheet">
+  <link rel="stylesheet" href="scss/_global.scss" type="text/css"/>
 
 </head>
 
@@ -46,7 +47,13 @@
             <a class="nav-link js-scroll-trigger" href="#portfolio">Documentación</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#contact">Descargas</a>
+            <a class="nav-link js-scroll-trigger" href="#download">Descargas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#contact">Contacto</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#nosotros">Nosotros</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="cajero_automatico/login.html">Simulador cajero</a>
@@ -96,20 +103,20 @@
           <div class="mt-5">
             <i class="fas fa-4x fa-gem text-primary mb-4"></i>
             <h3 class="h4 mb-2">Realizar pagos con el celular</h3>
-            <p class="text-muted mb-0">Si sos vendedor, podes generar un QR para cobrar al instante!</p>
+            <p class="text-muted mb-0">Si sos vendedor, podés generar un QR para cobrar al instante!</p>
           </div>
         </div>
         <div class="col-lg-4 col-md-6 text-center">
           <div class="mt-5">
             <i class="fas fa-4x fa-laptop-code text-primary mb-4"></i>
             <h3 class="h4 mb-2">Disponibilidad</h3>
-            <p class="text-muted mb-0">Podes realizar operaciones online las 24hs.</p>
+            <p class="text-muted mb-0">Podés realizar operaciones online las 24hs.</p>
           </div>
         </div>
         <div class="col-lg-4 col-md-6 text-center">
           <div class="mt-5">
             <i class="fas fa-4x fa-globe text-primary mb-4"></i>
-            <h3 class="h4 mb-2">Transferencias a cualquier banco.</h3>
+            <h3 class="h4 mb-2">Transferencias a cualquier banco</h3>
             <p class="text-muted mb-0">Podés enviar y recibir dinero con cualquier persona.</p>
           </div>
         </div>
@@ -226,10 +233,10 @@
   </section>
 
   <!-- Call to Action Section -->
-  <section class="page-section bg-dark text-white">
+  <section class="page-section bg-dark text-white" id="download">
     <div class="container text-center">
-      <h2 class="mb-4">Free Download at Start Bootstrap!</h2>
-      <a class="btn btn-light btn-xl" href="https://startbootstrap.com/themes/creative/">Download Now!</a>
+      <h2 class="mb-4">Descarga gratuita!</h2>
+      <a class="btn btn-light btn-xl" href="https://startbootstrap.com/themes/creative/">Descarga ahora!</a>
     </div>
   </section>
 
@@ -238,21 +245,62 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-lg-8 text-center">
-          <h2 class="mt-0">Let's Get In Touch!</h2>
+          <h2 class="mt-0">Mantengámonos en contacto!</h2>
           <hr class="divider my-4">
-          <p class="text-muted mb-5">Ready to start your next project with us? Give us a call or send us an email and we will get back to you as soon as possible!</p>
+          <p class="text-muted mb-5">¿Listo para comenzar tu próximo proyecto con nosotros? Llamanos o envianos un correo electrónico y nos pondremos en contacto contigo lo antes posible!</p>
         </div>
       </div>
       <div class="row">
         <div class="col-lg-4 ml-auto text-center">
           <i class="fas fa-phone fa-3x mb-3 text-muted"></i>
-          <div>+1 (202) 555-0149</div>
+          <div>+54 9 (11) 555-0149</div>
         </div>
         <div class="col-lg-4 mr-auto text-center">
           <i class="fas fa-envelope fa-3x mb-3 text-muted"></i>
           <!-- Make sure to change the email address in anchor text AND the link below! -->
-          <a class="d-block" href="mailto:contact@yourwebsite.com">contact@yourwebsite.com</a>
+          <a class="d-block" href="mailto:contact@yourwebsite.com">info@bancoralito.com.ar</a>
         </div>
+      </div>
+    </div>
+  </section>
+
+  
+  <section class="page-section" id="nosotros">
+    <div class="container">
+      <h2 class="text-center mt-0">Los fundadores</h2>
+      <hr class="divider my-4">
+      <div class="row">
+        <div class="col-lg-4 col-md-6 text-center">
+          <div class="mt-5">
+          <a class="portfolio-box" href="img/tomi-recorte.jpg.jpg"></a>
+            <img class="img-fluid" src="img/tomi-recorte.jpg" alt="" width="250" height="250">
+            <h3 class="h4 mb-2">Tomás De Gregorio</h3>
+            <p class="text-muted mb-0">"Casi todos podemos soportar la adversidad, pero si quieres probar el carácter de un hombre, dale poder". Ing. en Sistemas</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 text-center">
+          <div class="mt-5">
+            <a class="portfolio-box" href="img/timo-recorte.jpeg"></a>
+            <img class="img-fluid" src="img/timo-recorte.jpeg" alt="" width="250" height="250">
+            <h3 class="h4 mb-2">Timoteo Pasinato</h3>
+            <p class="text-muted mb-0">"El hombre acepta sin problemas que una máquina corra más que él. Pero, difícilmente aceptará, que piense mejor que él". Ing. en Sistemas</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 text-center">
+          <div class="mt-5">
+            <a class="portfolio-box" href="img/brian-recorte.jpg"></a>
+            <img class="img-fluid" src="img/brian-recorte.jpg" alt="" width="240" height="24    0">
+            <h3 class="h4 mb-2">Brian Ríos</h3>
+            <p class="text-muted mb-0">"Los sabios son los que buscan la sabiduría; los necios piensan ya haberla encontrado". Ing. en Sistemas</p>
+          </div>
+        </div>
+<!--        <div class="col-lg-3 col-md-6 text-center">
+          <div class="mt-5">
+            <i class="fas fa-4x fa-heart text-primary mb-4"></i>
+            <h3 class="h4 mb-2">Made with Love</h3>
+            <p class="text-muted mb-0">Is it really open source if it's not made with love?</p>
+          </div>
+        </div>-->
       </div>
     </div>
   </section>

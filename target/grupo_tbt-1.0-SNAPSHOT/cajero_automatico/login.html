@@ -13,15 +13,6 @@ and open the template in the editor.
         <link href="css/login.css" rel="stylesheet" id="bootstrap-css">
         <script src="jquery/jquery.js"></script>
         <link href="css/all.css" rel="stylesheet">
-
-        <!--
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        -->
-        <style>
-            
-            
-        </style>
     </head>
     <body>
         <div class="wrapper fadeInDown">
@@ -36,8 +27,8 @@ and open the template in the editor.
 
                   <!-- Login Form -->
                   <form>
-                    <input type="text" id="login" class="fadeIn second" name="usuario" placeholder="usuario">
-                    <input type="text" id="password" class="fadeIn third" name="password" placeholder="contraseña">
+                    <input type="text" value="" id="usuario" class="fadeIn second" name="usuario" placeholder="usuario">
+                    <input type="password" value="" id="password" class="fadeIn third" name="password" placeholder="contraseña">
                     <input type="submit" id="btnIngresar" class="fadeIn fourth" value="Ingresar">
                   </form>
             </div>
@@ -45,12 +36,13 @@ and open the template in the editor.
         <script>
             $("#btnIngresar").click(function(event){
                 event.preventDefault();
-                let user = $("#login").val();
+                var user = $("#usuario").val();
                 let pass = $("#password").val();
                 if(user == "" || pass == ""){
-                    alert("Por favor ingrese usuario y contraseña");
+                    alert("Por favor ingrese su usuario y contraseña");
                 }else{
                     location.href = "main.html";
+                    
                 }
             });
         </script>
