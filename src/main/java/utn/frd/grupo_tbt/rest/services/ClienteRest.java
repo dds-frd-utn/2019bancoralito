@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
@@ -30,8 +31,19 @@ import javax.json.Json;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Arrays;
+import java.util.Date;
+import javax.validation.constraints.Null;
+import utn.frd.grupo_tbt.entity.Cuenta;
+import utn.frd.grupo_tbt.entity.Movimiento;
+import utn.frd.grupo_tbt.sessions.CuentaFacade;
+import utn.frd.grupo_tbt.sessions.MovimientoFacade;
+
 /**
 *
 * @author Brian
@@ -48,20 +60,19 @@ public class ClienteRest {
             urlConnection.setRequestMethod("GET");
             urlConnection.setDoInput(true);
             urlConnection.setDoOutput(true);
-            urlConnection.setFixedLengthStreamingMode(jsonParam.toString().getBytes().length);
-
+            if(jsonParam.length() >0){
+                urlConnection.setFixedLengthStreamingMode(jsonParam.toString().getBytes().length);
+            }
             urlConnection.setRequestProperty(
                                    "Content-Type", "application/json;charset=utf-8");
             urlConnection.setRequestProperty("X-Requested-With", "XMLHttpRequest");
             urlConnection.connect();
-
-
-            OutputStream os;
-            os = new BufferedOutputStream(urlConnection.getOutputStream());
-            os.write(jsonParam.toString().getBytes());
-            os.flush();
-
-
+            if(jsonParam.length() >0){
+                OutputStream os;
+                os = new BufferedOutputStream(urlConnection.getOutputStream());
+                os.write(jsonParam.toString().getBytes());
+                os.flush();
+            }
             StringBuilder sBuilder;
             InputStream inputStream;
             inputStream= urlConnection.getInputStream();
@@ -78,9 +89,30 @@ public class ClienteRest {
            return e.getMessage();
         }
     }
+    public JSONObject stringArrayToJSON(String[] datos) throws JSONException{
+        JSONObject json = new JSONObject();
+//        int i = 0;
+        String key = "";
+        String value ="";
+        String[] aux = null;
+        try{
+            for(String d:datos){
+                aux = d.split("=>");
+                key = aux[0];
+                value = aux[1];
+                json.put(key,value);
+            }
+            return json;
+        }catch(JSONException e){
+            return new JSONObject();
+        }
+        
+    }
     @EJB
     
     private ClienteFacade ejbClienteFacade;
+    private CuentaFacade ejbCuentaFacade;
+    private MovimientoFacade ejbMovFacade;
     //obtener todas las entidades
     @GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -91,40 +123,70 @@ public class ClienteRest {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.TEXT_PLAIN})
-    public String create(String cliente) throws JSONException, MalformedURLException, IOException{
+    public String create(String peticionAlta) throws JSONException, MalformedURLException, IOException{
         try{
-            JSONObject jsonCliente = new JSONObject(cliente);
-            String du = jsonCliente.get("du").toString();
-            String url = "http://lsi.no-ip.org:8282/esferopolis/api/ciudadano/"+du;
+            JSONObject jsonPeticionAlta = new JSONObject(peticionAlta);
+            String du = jsonPeticionAlta.get("du").toString();
+            int duInt = jsonPeticionAlta.getInt("du");
+            //si no existe el cliente en nuestro banco
+            if(this.findByDu(duInt).getInt("flag_error") == 1){
+                String saldoInicial = jsonPeticionAlta.get("saldo").toString();
+                String usuario = jsonPeticionAlta.get("usuario").toString();
+                String contrasenia = jsonPeticionAlta.get("contrasenia").toString();
+                String email = jsonPeticionAlta.get("email").toString();
 
-            //hardcodeo el parametro vacio
-            JSONObject jsonParam = new JSONObject();
+                String url = "http://lsi.no-ip.org:8282/esferopolis/api/ciudadano/"+du;
 
-            return this.enviarHttpRequest(url, "GET", jsonParam);
-//            return (String)"Hola";
+                //hardcodeo el parametro vacio
+                JSONObject jsonParam = new JSONObject();
+
+                String ciudadanoString = this.enviarHttpRequest(url, "GET", jsonParam);
+                JSONObject ciudadano = new JSONObject(ciudadanoString);
+                if(ciudadano.getInt("estadoCrediticio")<3){
+                    //return (String)"Es apto";
+                    //Creo cliente
+                    //public Cliente(String contrasenia, String usuario,String nombre,String direccion, int idTipoCliente, int du)
+                    String fechaString = ciudadano.getString("fechaNacimiento").substring(0, 10);
+                    Cliente nuevoCliente = new Cliente(contrasenia,usuario,ciudadano.getString("nombre"),ciudadano.getString("direccion"),new SimpleDateFormat("yyyy-MM-dd").parse(fechaString),email,1,duInt);
+                    ejbClienteFacade.create(nuevoCliente);
+
+                    JsonObject jsonNuevoCliente = this.findByDu(duInt);
+                    
+                    int idCliente = jsonNuevoCliente.getInt("idCliente");
+
+                    //Creo cuenta en banco central
+                    //Armo un array de strings para automatizar un poco el armado del json object
+                    String[] datosCuenta = {"idBanco=>16","saldo=>"+saldoInicial,"idCiudadano=>"+du};
+
+                    JSONObject jsonCrearCuenta = this.stringArrayToJSON(datosCuenta);
+                    
+//                    return jsonCrearCuenta.toString();
+                    
+                    String urlCrearCuenta = "http://lsi.no-ip.org:8282/esferopolis/api/cuenta";
+                    String idCuenta = this.enviarHttpRequest(urlCrearCuenta,"POST",jsonCrearCuenta);
+                    return jsonCrearCuenta.toString()+idCuenta;
+                    /*
+                    //luego crear cuenta en nuestro banco
+                    Cuenta nuevaCuenta = new Cuenta(1,1,idCliente);
+                    ejbCuentaFacade.create(nuevaCuenta);
+                    //cargo saldo inicial
+                    //public Movimiento(int idCuentaOrigen,int idCuentaDestino, Float importe, Date fechaHora, int idTipoMovimiento, int estado)
+                    Movimiento movSaldoInicial = new Movimiento(0,Integer.parseInt(idCuenta),Float.parseFloat(saldoInicial),new Date(),1,1);
+
+                    ejbMovFacade.create(movSaldoInicial);
+
+                    return (String)"Listo";
+                    */
+                }else{
+                    return (String) "No es apto";
+
+                }
+            }else{
+                return (String)"El cliente ya existe";
+            }
         }catch(Exception e){
             return e.getMessage();
         }
-        /*
-        
-        if((int)jsonRespuesta.get("estadoCrediticio") <3){
-            //ejbClienteFacade.crear(cliente);
-            JsonObject jsonError = Json.createObjectBuilder()
-                                        .add("flag_error", 0)
-                                        .add("mensaje", "Es apto").build();
-                
-            return jsonError;
-        }else{
-            //devolver "error, el estado crediticio no es apto";
-            JsonObject jsonError = Json.createObjectBuilder()
-                                        .add("flag_error", 1)
-                                        .add("error", "No es apto").build();
-                
-            return jsonError;
-        }
-        */
-        //ejbClienteFacade.create(cliente);
-        //crear cuenta con el idCliente que recien generamos
     }
     
     
@@ -155,6 +217,8 @@ public class ClienteRest {
                 resultado = (Cliente)query.getSingleResult();
                 
                 JsonObject jsonResultado = Json.createObjectBuilder()
+                                        .add("flag_error", 0)
+                                        .add("idCliente",resultado.getIdCliente())
                                         .add("du", resultado.getDu())
                                         .add("nombre", resultado.getNombre())
                                         .add("apellido", resultado.getApellido())

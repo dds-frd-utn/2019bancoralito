@@ -59,8 +59,8 @@ public class Cuenta implements Serializable {
         this.idCuenta = idCuenta;
     }
 
-    public Cuenta(Integer idCuenta, int idTipoCuenta, int idTipoMoneda, int idCliente) {
-        this.idCuenta = idCuenta;
+    public Cuenta(int idTipoCuenta, int idTipoMoneda, int idCliente) {
+//        this.idCuenta = idCuenta;
         this.idTipoCuenta = idTipoCuenta;
         this.idTipoMoneda = idTipoMoneda;
         this.idCliente = idCliente;

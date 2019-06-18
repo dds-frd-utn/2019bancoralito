@@ -91,10 +91,15 @@ public class Cliente implements Serializable {
         this.idCliente = idCliente;
     }
 
-    public Cliente(Integer idCliente, String contrasenia, String usuario, int idTipoCliente, int du) {
-        this.idCliente = idCliente;
+    public Cliente(String contrasenia, String usuario,String nombre,String direccion,Date fechaNacimiento,String email, int idTipoCliente, int du) {
+        
         this.contrasenia = contrasenia;
         this.usuario = usuario;
+        this.nombre = nombre;
+        this.apellido = "";
+        this.direccion = direccion;
+        this.fechaNacimiento = fechaNacimiento;
+        this.email = email;
         this.idTipoCliente = idTipoCliente;
         this.du = du;
     }

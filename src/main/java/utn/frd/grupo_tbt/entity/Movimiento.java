@@ -6,7 +6,6 @@
 package utn.frd.grupo_tbt.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -55,7 +54,7 @@ public class Movimiento implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "importe")
-    private BigDecimal importe;
+    private Float importe;
     @Basic(optional = false)
     @NotNull
     @Column(name = "fechaHora")
@@ -65,6 +64,9 @@ public class Movimiento implements Serializable {
     @NotNull
     @Column(name = "idTipoMovimiento")
     private int idTipoMovimiento;
+    @Basic(optional = false)
+    @Column(name = "estado")
+    private int estado;
 
     public Movimiento() {
     }
@@ -73,12 +75,13 @@ public class Movimiento implements Serializable {
         this.idMovimiento = idMovimiento;
     }
 
-    public Movimiento(Integer idMovimiento, int idCuentaDestino, BigDecimal importe, Date fechaHora, int idTipoMovimiento) {
-        this.idMovimiento = idMovimiento;
+    public Movimiento(int idCuentaOrigen,int idCuentaDestino, Float importe, Date fechaHora, int idTipoMovimiento,int estado) {
+        this.idCuentaOrigen = idCuentaOrigen;
         this.idCuentaDestino = idCuentaDestino;
         this.importe = importe;
         this.fechaHora = fechaHora;
         this.idTipoMovimiento = idTipoMovimiento;
+        this.estado = estado;
     }
 
     public Integer getIdMovimiento() {
@@ -105,11 +108,11 @@ public class Movimiento implements Serializable {
         this.idCuentaDestino = idCuentaDestino;
     }
 
-    public BigDecimal getImporte() {
+    public Float getImporte() {
         return importe;
     }
 
-    public void setImporte(BigDecimal importe) {
+    public void setImporte(Float importe) {
         this.importe = importe;
     }
 
@@ -128,7 +131,13 @@ public class Movimiento implements Serializable {
     public void setIdTipoMovimiento(int idTipoMovimiento) {
         this.idTipoMovimiento = idTipoMovimiento;
     }
+    public Integer getEstado() {
+        return estado;
+    }
 
+    public void setEstado(Integer estado) {
+        this.estado = estado;
+    }
     @Override
     public int hashCode() {
         int hash = 0;
