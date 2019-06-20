@@ -164,10 +164,10 @@ public class ClienteRest {
                     
                     String urlCrearCuenta = "http://lsi.no-ip.org:8282/esferopolis/api/cuenta";
                     String idCuenta = this.enviarHttpRequest(urlCrearCuenta,"POST",jsonCrearCuenta);
-                    return jsonCrearCuenta.toString()+idCuenta;
-                    /*
+                    //return jsonCrearCuenta.toString()+idCuenta;
+                    
                     //luego crear cuenta en nuestro banco
-                    Cuenta nuevaCuenta = new Cuenta(1,1,idCliente);
+                    Cuenta nuevaCuenta = new Cuenta(Integer.parseInt(idCuenta),1,idCliente);
                     ejbCuentaFacade.create(nuevaCuenta);
                     //cargo saldo inicial
                     //public Movimiento(int idCuentaOrigen,int idCuentaDestino, Float importe, Date fechaHora, int idTipoMovimiento, int estado)
@@ -176,7 +176,7 @@ public class ClienteRest {
                     ejbMovFacade.create(movSaldoInicial);
 
                     return (String)"Listo";
-                    */
+                    
                 }else{
                     return (String) "No es apto";
 
