@@ -33,18 +33,18 @@ and open the template in the editor.
 
                   <!-- Login Form -->
                   <form method="POST" action="http://localhost:8080/tp2019/rest/cliente">
-                    <input type="text" value="" id="usuario" class="fadeIn second" name="usuario" placeholder="usuario" pattern="^{1,}$">
-                    <input type="text" value="" id="contrasenia" class="fadeIn second" name="contrasenia" placeholder="contraseña" pattern="^{1,}$">
-                    <input type="text" value="" id="du" class="fadeIn second" name="du" placeholder="documento" pattern="^{1,}$">
-                    <input type="text" value="" id="saldoInicial" class="fadeIn second" name="saldoInicial" placeholder="saldo inicial" pattern="^{1,}$">
-                    <input type="text" value="" id="email" class="fadeIn second" name="email" placeholder="correo electronico" pattern="^{1,}$">
-                    <input type="submit" id="btnIngresar" class="fadeIn fourth" value="Registrarse">
+                    <input type="text" value="" id="usuario" class="fadeIn second" name="usuario" placeholder="usuario" autofocus="">
+                    <input type="text" value="" id="contrasenia" class="fadeIn second" name="contrasenia" placeholder="contraseña">
+                    <input type="text" value="" id="du" class="fadeIn second" name="du" placeholder="documento">
+                    <input type="text" value="" id="saldoInicial" class="fadeIn second" name="saldoInicial" placeholder="saldo inicial">
+                    <input type="text" value="" id="email" class="fadeIn second" name="email" placeholder="correo electronico">
+                    <input type="button" onclick="accion()" id="btnIngresar" class="fadeIn fourth" value="Registrarse">
                   </form>
             </div>
         </div>
         <script src="https://code.jquery.com/jquery-2.2.2.min.js"></script>
         <script src="js/enviar.js"></script>
-       <!-- <script>
+    <!--    <script>
             $("#btnIngresar").click(function(){
                 event.preventDefault();
                 var user = $("#usuario").val();
@@ -54,6 +54,11 @@ and open the template in the editor.
                 var email = $("#email").val();
                 if(user === "" || pass === "" || du === "" || saldoInicial === "" || email === ""){
                     alert("Por favor complete todos los campos");
+                } else {
+                    $("#btnIngresar").submit();
+                    
+                    alert("Datos enviados");
+                    
                 } 
             }); 
         </script> -->
