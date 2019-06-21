@@ -33,18 +33,18 @@ and open the template in the editor.
 
                   <!-- Login Form -->
                   <form method="POST" action="http://localhost:8080/tp2019/rest/cliente">
-                    <input type="text" value="" id="usuario" class="fadeIn second" name="usuario" placeholder="usuario">
-                    <input type="text" value="" id="contrasenia" class="fadeIn second" name="contrasenia" placeholder="contraseña">
-                    <input type="text" value="" id="du" class="fadeIn second" name="du" placeholder="documento">
-                    <input type="text" value="" id="saldoInicial" class="fadeIn second" name="saldoInicial" placeholder="saldo inicial">
-                    <input type="text" value="" id="email" class="fadeIn second" name="email" placeholder="correo electronico">
+                    <input type="text" value="" id="usuario" class="fadeIn second" name="usuario" placeholder="usuario" pattern="^{1,}$">
+                    <input type="text" value="" id="contrasenia" class="fadeIn second" name="contrasenia" placeholder="contraseña" pattern="^{1,}$">
+                    <input type="text" value="" id="du" class="fadeIn second" name="du" placeholder="documento" pattern="^{1,}$">
+                    <input type="text" value="" id="saldoInicial" class="fadeIn second" name="saldoInicial" placeholder="saldo inicial" pattern="^{1,}$">
+                    <input type="text" value="" id="email" class="fadeIn second" name="email" placeholder="correo electronico" pattern="^{1,}$">
                     <input type="submit" id="btnIngresar" class="fadeIn fourth" value="Registrarse">
                   </form>
             </div>
         </div>
         <script src="https://code.jquery.com/jquery-2.2.2.min.js"></script>
         <script src="js/enviar.js"></script>
-     <!--   <script>
+       <!-- <script>
             $("#btnIngresar").click(function(){
                 event.preventDefault();
                 var user = $("#usuario").val();
@@ -54,27 +54,8 @@ and open the template in the editor.
                 var email = $("#email").val();
                 if(user === "" || pass === "" || du === "" || saldoInicial === "" || email === ""){
                     alert("Por favor complete todos los campos");
-                }else{
-                    //location.href = "main.html";
-                    
-                    var data = '{"du":'+du+',"saldo":'+saldoInicial+',"usuario":'+user+',"contrasenia":'+pass+',"email":'+email+'}';
-
-                    $.ajax({
-                        type: "POST",
-                        url: "http://localhost:8080/tp2019/rest/cliente",
-                        //params: $.param(data),
-                        data: data,
-                        success: function(response) {
-                            console.log(response);
-                        },
-                        error: function(error){
-                            console.log(error);
-                            alert("Problemas al tratar de enviar el formulario");
-                        }
-                    });
-                    
-                }
-            });
+                } 
+            }); 
         </script> -->
     </body>
 </html>
