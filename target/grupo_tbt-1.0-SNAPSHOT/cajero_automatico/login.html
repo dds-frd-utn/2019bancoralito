@@ -13,6 +13,12 @@ and open the template in the editor.
         <link href="css/login.css" rel="stylesheet" id="bootstrap-css">
         <script src="jquery/jquery.js"></script>
         <link href="css/all.css" rel="stylesheet">
+        <style>
+            #btnCrear, #btnIngresar{
+                width:40vh;
+                padding: 10px;
+            }
+        </style>
     </head>
     <body>
         <div class="wrapper fadeInDown">
@@ -30,6 +36,7 @@ and open the template in the editor.
                     <input type="text" value="" id="usuario" class="fadeIn second" name="usuario" placeholder="usuario">
                     <input type="password" value="" id="password" class="fadeIn third" name="password" placeholder="contraseña">
                     <input type="submit" id="btnIngresar" class="fadeIn fourth" value="Ingresar">
+                    <input type="submit" id="btnCrear" class="fadeIn fourth" value="Crear cuenta">
                   </form>
             </div>
         </div>
@@ -44,6 +51,12 @@ and open the template in the editor.
                     location.href = "main.html";
                     
                 }
+            });
+        </script>
+        <script>
+            $("#btnCrear").click(function(event){
+                event.preventDefault();
+                    location.href = "new.html";
             });
         </script>
     </body>

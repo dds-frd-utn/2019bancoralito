@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package utn.frd.grupo_tbt.rest.services;
+import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.String;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,6 +44,15 @@ import utn.frd.grupo_tbt.entity.Cuenta;
 import utn.frd.grupo_tbt.entity.Movimiento;
 import utn.frd.grupo_tbt.sessions.CuentaFacade;
 import utn.frd.grupo_tbt.sessions.MovimientoFacade;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.ParseException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.FormParam;
 
 /**
 *
@@ -50,7 +60,7 @@ import utn.frd.grupo_tbt.sessions.MovimientoFacade;
 */
 
 @Path("/cliente")
-public class ClienteRest {
+public class ClienteRest extends HttpServlet{
     public String enviarHttpRequest(String urlParam, String method, JSONObject jsonParam){
         try {
             URL url = new URL(urlParam);
@@ -108,6 +118,27 @@ public class ClienteRest {
         }
         
     }
+    /*
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+
+        String du = request.getParameter("du");
+        String saldoInicial = request.getParameter("saldoInicial");
+        String usuario = request.getParameter("usuario");
+        String contrasenia = request.getParameter("contrasenia");
+        String email = request.getParameter("email");
+        
+        out.println("Nombre: "+request.getParameter("du"));
+        
+        /*String peticionAlta = "{\"du\":"+du+",\"saldoInicial\":"+saldoInicial+",\"usuario\":"
+                + usuario+",\"constrasenia\":"+contrasenia+",\"email\":"+email;
+        
+        String respuesta = this.create(peticionAlta);
+        
+        response.getWriter().write(respuesta);
+        }*/
+    
     @EJB
     
     private ClienteFacade ejbClienteFacade;
@@ -120,20 +151,44 @@ public class ClienteRest {
     return ejbClienteFacade.findAll();
     }
     //crear entidades
+
+    /**
+     *
+     * @param du
+     * @param saldoInicial
+     * @param usuario
+     * @param contrasenia
+     * @param email
+     * @return
+     * @throws JSONException
+     * @throws MalformedURLException
+     * @throws IOException
+     */
     @POST
-    @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.TEXT_PLAIN})
-    public String create(String peticionAlta) throws JSONException, MalformedURLException, IOException{
+    //public String doPost(HttpServletRequest request, String response) throws ServletException, IOException {
+    public String create(@FormParam("du") String du,
+                        @FormParam("saldoInicial") String saldoInicial,
+                        @FormParam("usuario") String usuario,
+                        @FormParam("contrasenia") String contrasenia,
+                        @FormParam("email") String email
+            ) throws JSONException, MalformedURLException, IOException{
         try{
-            JSONObject jsonPeticionAlta = new JSONObject(peticionAlta);
-            String du = jsonPeticionAlta.get("du").toString();
+            JSONObject jsonPeticionAlta = new JSONObject();
+                jsonPeticionAlta.put("du", du);
+                jsonPeticionAlta.put("saldo", saldoInicial);
+                jsonPeticionAlta.put("usuario", usuario);
+                jsonPeticionAlta.put("contrasenia", contrasenia);
+                jsonPeticionAlta.put("email", email);
+            
+            du = jsonPeticionAlta.get("du").toString();
             int duInt = jsonPeticionAlta.getInt("du");
             //si no existe el cliente en nuestro banco
             if(this.findByDu(duInt).getInt("flag_error") == 1){
-                String saldoInicial = jsonPeticionAlta.get("saldo").toString();
-                String usuario = jsonPeticionAlta.get("usuario").toString();
-                String contrasenia = jsonPeticionAlta.get("contrasenia").toString();
-                String email = jsonPeticionAlta.get("email").toString();
+                saldoInicial = jsonPeticionAlta.get("saldo").toString();
+                usuario = jsonPeticionAlta.get("usuario").toString();
+                contrasenia = jsonPeticionAlta.get("contrasenia").toString();
+                email = jsonPeticionAlta.get("email").toString();
 
                 String url = "http://lsi.no-ip.org:8282/esferopolis/api/ciudadano/"+du;
 
@@ -175,7 +230,7 @@ public class ClienteRest {
 
                     ejbMovFacade.create(movSaldoInicial);
 
-                    return (String)"Listo";
+                    return (String) "Listo";
                     
                 }else{
                     return (String) "No es apto";
@@ -184,7 +239,7 @@ public class ClienteRest {
             }else{
                 return (String)"El cliente ya existe";
             }
-        }catch(Exception e){
+        }catch(NumberFormatException | ParseException | JSONException e){
             return e.getMessage();
         }
     }

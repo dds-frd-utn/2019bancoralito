@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Crear Cuenta BANCO RALITO</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link href="css/login.css" rel="stylesheet" id="bootstrap-css">
+        <script src="jquery/jquery.js"></script>
+        <link href="css/all.css" rel="stylesheet">
+        <style>
+            #btnCrear, #btnIngresar{
+                width:40vh;
+                padding: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper fadeInDown">
+            <div id="formContent">
+              <!-- Tabs Titles -->
+
+                    <!-- Icon -->
+                  <div class="fadeIn first">
+                    <!--<img src="" id="icon" alt="User Icon" />-->
+                    <h4>Banco Ralito</h4>
+                  </div>
+
+                  <!-- Login Form -->
+                  <form method="POST" action="http://localhost:8080/tp2019/rest/cliente">
+                    <input type="text" value="" id="usuario" class="fadeIn second" name="usuario" placeholder="usuario">
+                    <input type="text" value="" id="contrasenia" class="fadeIn second" name="contrasenia" placeholder="contraseña">
+                    <input type="text" value="" id="du" class="fadeIn second" name="du" placeholder="documento">
+                    <input type="text" value="" id="saldoInicial" class="fadeIn second" name="saldoInicial" placeholder="saldo inicial">
+                    <input type="text" value="" id="email" class="fadeIn second" name="email" placeholder="correo electronico">
+                    <input type="submit" id="btnIngresar" class="fadeIn fourth" value="Registrarse">
+                  </form>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-2.2.2.min.js"></script>
+        <script src="js/enviar.js"></script>
+     <!--   <script>
+            $("#btnIngresar").click(function(){
+                event.preventDefault();
+                var user = $("#usuario").val();
+                let pass = $("#contrasenia").val();
+                var du = $("#du").val();
+                var saldoInicial = $("#saldoInicial").val();
+                var email = $("#email").val();
+                if(user === "" || pass === "" || du === "" || saldoInicial === "" || email === ""){
+                    alert("Por favor complete todos los campos");
+                }else{
+                    //location.href = "main.html";
+                    
+                    var data = '{"du":'+du+',"saldo":'+saldoInicial+',"usuario":'+user+',"contrasenia":'+pass+',"email":'+email+'}';
+
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:8080/tp2019/rest/cliente",
+                        //params: $.param(data),
+                        data: data,
+                        success: function(response) {
+                            console.log(response);
+                        },
+                        error: function(error){
+                            console.log(error);
+                            alert("Problemas al tratar de enviar el formulario");
+                        }
+                    });
+                    
+                }
+            });
+        </script> -->
+    </body>
+</html>
