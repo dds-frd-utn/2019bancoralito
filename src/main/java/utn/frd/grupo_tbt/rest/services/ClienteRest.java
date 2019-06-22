@@ -211,9 +211,15 @@ public class ClienteRest extends HttpServlet{
 
                     //Creo cuenta en banco central
                     //Armo un array de strings para automatizar un poco el armado del json object
-                    String[] datosCuenta = {"idBanco=>16","saldo=>"+saldoInicial,"idCiudadano=>"+du};
+                    //String[] datosCuenta = {"idBanco=>16","idCiudadano=>"+du,"saldo=>"+saldoInicial};
 
-                    JSONObject jsonCrearCuenta = this.stringArrayToJSON(datosCuenta);
+                    String datosCuenta = "{\"idBanco\":{\"id\":16},\"idCiudadano\":{\"id\":"+du
+                    +"},\"saldo\":"+saldoInicial+"}";
+                    
+      //Según la RTA de SERGIO
+                    
+                    //JSONObject jsonCrearCuenta = this.stringArrayToJSON(datosCuenta);
+                    JSONObject jsonCrearCuenta = new JSONObject(datosCuenta);
                     
 //                    return jsonCrearCuenta.toString();
                     
@@ -221,8 +227,10 @@ public class ClienteRest extends HttpServlet{
                     String idCuenta = this.enviarHttpRequest(urlCrearCuenta,"POST",jsonCrearCuenta);
                     //return jsonCrearCuenta.toString()+idCuenta;
                     
+                    idCuenta = "4";
+                    
                     //luego crear cuenta en nuestro banco
-                    Cuenta nuevaCuenta = new Cuenta(Integer.parseInt(idCuenta),1,idCliente);
+                    Cuenta nuevaCuenta = new Cuenta(1,idCliente);
                     ejbCuentaFacade.create(nuevaCuenta);
                     //cargo saldo inicial
                     //public Movimiento(int idCuentaOrigen,int idCuentaDestino, Float importe, Date fechaHora, int idTipoMovimiento, int estado)

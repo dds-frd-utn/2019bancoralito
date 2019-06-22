@@ -29,7 +29,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Cuenta.findAll", query = "SELECT c FROM Cuenta c")
     , @NamedQuery(name = "Cuenta.findByIdCuenta", query = "SELECT c FROM Cuenta c WHERE c.idCuenta = :idCuenta")
     , @NamedQuery(name = "Cuenta.findByIdTipoCuenta", query = "SELECT c FROM Cuenta c WHERE c.idTipoCuenta = :idTipoCuenta")
-    , @NamedQuery(name = "Cuenta.findByIdTipoMoneda", query = "SELECT c FROM Cuenta c WHERE c.idTipoMoneda = :idTipoMoneda")
     , @NamedQuery(name = "Cuenta.findByIdCliente", query = "SELECT c FROM Cuenta c WHERE c.idCliente = :idCliente")})
 public class Cuenta implements Serializable {
 
@@ -38,15 +37,11 @@ public class Cuenta implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "idCuenta")
-    private Integer idCuenta;
+    private int idCuenta;
     @Basic(optional = false)
     @NotNull
     @Column(name = "idTipoCuenta")
     private int idTipoCuenta;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "idTipoMoneda")
-    private int idTipoMoneda;
     @Basic(optional = false)
     @NotNull
     @Column(name = "idCliente")
@@ -59,10 +54,8 @@ public class Cuenta implements Serializable {
         this.idCuenta = idCuenta;
     }
 
-    public Cuenta(int idTipoCuenta, int idTipoMoneda, int idCliente) {
-//        this.idCuenta = idCuenta;
+    public Cuenta(int idTipoCuenta, int idCliente) {
         this.idTipoCuenta = idTipoCuenta;
-        this.idTipoMoneda = idTipoMoneda;
         this.idCliente = idCliente;
     }
 
@@ -80,14 +73,6 @@ public class Cuenta implements Serializable {
 
     public void setIdTipoCuenta(int idTipoCuenta) {
         this.idTipoCuenta = idTipoCuenta;
-    }
-
-    public int getIdTipoMoneda() {
-        return idTipoMoneda;
-    }
-
-    public void setIdTipoMoneda(int idTipoMoneda) {
-        this.idTipoMoneda = idTipoMoneda;
     }
 
     public int getIdCliente() {
