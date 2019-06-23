@@ -1,0 +1,5 @@
+node_modules
+bower_components
+nb-configuration.xml
+target/
+/nbproject/
