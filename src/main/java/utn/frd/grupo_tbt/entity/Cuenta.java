@@ -29,7 +29,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Cuenta.findAll", query = "SELECT c FROM Cuenta c")
     , @NamedQuery(name = "Cuenta.findByIdCuenta", query = "SELECT c FROM Cuenta c WHERE c.idCuenta = :idCuenta")
     , @NamedQuery(name = "Cuenta.findByIdTipoCuenta", query = "SELECT c FROM Cuenta c WHERE c.idTipoCuenta = :idTipoCuenta")
-    , @NamedQuery(name = "Cuenta.findByIdCliente", query = "SELECT c FROM Cuenta c WHERE c.idCliente = :idCliente")})
+    , @NamedQuery(name = "Cuenta.findByIdCliente", query = "SELECT c FROM Cuenta c WHERE c.idCliente = :idCliente")
+    , @NamedQuery(name = "Cuenta.saldoCuenta", query = "SELECT c AS saldo FROM (SELECT f_saldoCuenta(:idCuenta)) c")
+    })
 public class Cuenta implements Serializable {
 
     private static final long serialVersionUID = 1L;
