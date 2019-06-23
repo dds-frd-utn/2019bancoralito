@@ -4,14 +4,11 @@
  * and open the template in the editor.
  */
 package utn.frd.grupo_tbt.rest.services;
-import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.String;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
@@ -33,26 +30,19 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.Date;
-import javax.validation.constraints.Null;
 import utn.frd.grupo_tbt.entity.Cuenta;
 import utn.frd.grupo_tbt.entity.Movimiento;
 import utn.frd.grupo_tbt.sessions.CuentaFacade;
 import utn.frd.grupo_tbt.sessions.MovimientoFacade;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.ParseException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.FormParam;
+
+//import javax.ws.rs.FormParam;
 
 /**
 *
@@ -142,8 +132,7 @@ public class ClienteRest extends HttpServlet{
     @EJB
     
     private ClienteFacade ejbClienteFacade;
-    private CuentaFacade ejbCuentaFacade;
-    private MovimientoFacade ejbMovFacade;
+
     //obtener todas las entidades
     @GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -151,44 +140,47 @@ public class ClienteRest extends HttpServlet{
     return ejbClienteFacade.findAll();
     }
     //crear entidades
-
-    /**
-     *
-     * @param du
-     * @param saldoInicial
-     * @param usuario
-     * @param contrasenia
-     * @param email
-     * @return
-     * @throws JSONException
-     * @throws MalformedURLException
-     * @throws IOException
-     */
-    @POST
-    @Produces({MediaType.TEXT_PLAIN})
-    //public String doPost(HttpServletRequest request, String response) throws ServletException, IOException {
+ /*
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String create(@FormParam("du") String du,
                         @FormParam("saldoInicial") String saldoInicial,
                         @FormParam("usuario") String usuario,
                         @FormParam("contrasenia") String contrasenia,
                         @FormParam("email") String email
             ) throws JSONException, MalformedURLException, IOException{
-        try{
-            JSONObject jsonPeticionAlta = new JSONObject();
-                jsonPeticionAlta.put("du", du);
+                JSONObject jsonPeticionAlta = new JSONObject();
+
+    jsonPeticionAlta.put("du", du);
                 jsonPeticionAlta.put("saldo", saldoInicial);
                 jsonPeticionAlta.put("usuario", usuario);
                 jsonPeticionAlta.put("contrasenia", contrasenia);
                 jsonPeticionAlta.put("email", email);
-            
-            du = jsonPeticionAlta.get("du").toString();
+      */
+
+    /**
+     *
+     * @param peticionAlta
+     * @return
+     * @throws JSONException
+     * @throws MalformedURLException
+     * @throws IOException
+     */
+
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.TEXT_PLAIN})
+    public String altaCliente(String peticionAlta) throws JSONException, MalformedURLException, IOException{
+        try{
+            JSONObject jsonPeticionAlta = new JSONObject(peticionAlta);
+                
+            String du = jsonPeticionAlta.get("du").toString();
             int duInt = jsonPeticionAlta.getInt("du");
             //si no existe el cliente en nuestro banco
             if(this.findByDu(duInt).getInt("flag_error") == 1){
-                saldoInicial = jsonPeticionAlta.get("saldo").toString();
-                usuario = jsonPeticionAlta.get("usuario").toString();
-                contrasenia = jsonPeticionAlta.get("contrasenia").toString();
-                email = jsonPeticionAlta.get("email").toString();
+                String saldoInicial = jsonPeticionAlta.get("saldo").toString();
+                String usuario = jsonPeticionAlta.get("usuario").toString();
+                String contrasenia = jsonPeticionAlta.get("contrasenia").toString();
+                String email = jsonPeticionAlta.get("email").toString();
 
                 String url = "http://lsi.no-ip.org:8282/esferopolis/api/ciudadano/"+du;
 
@@ -210,35 +202,34 @@ public class ClienteRest extends HttpServlet{
                     int idCliente = jsonNuevoCliente.getInt("idCliente");
 
                     //Creo cuenta en banco central
-                    //Armo un array de strings para automatizar un poco el armado del json object
-                    //String[] datosCuenta = {"idBanco=>16","idCiudadano=>"+du,"saldo=>"+saldoInicial};
-
-                    String datosCuenta = "{\"idBanco\":{\"id\":16},\"idCiudadano\":{\"id\":"+du
-                    +"},\"saldo\":"+saldoInicial+"}";
-                    
       //Según la RTA de SERGIO
+                    JSONObject jsonIdCuenta = new JSONObject("{\"id\":16}");
+                    JSONObject jsonIdCiudadano = new JSONObject("{\"id\":"+du+"}");
                     
-                    //JSONObject jsonCrearCuenta = this.stringArrayToJSON(datosCuenta);
-                    JSONObject jsonCrearCuenta = new JSONObject(datosCuenta);
+                    JSONObject jsonCrearCuenta = new JSONObject();
+                    jsonCrearCuenta.put("idBanco", jsonIdCuenta);
+                    jsonCrearCuenta.put("idCiudadano", jsonIdCiudadano);
+                    jsonCrearCuenta.put("saldo", saldoInicial);
                     
-//                    return jsonCrearCuenta.toString();
-                    
+                    /*
                     String urlCrearCuenta = "http://lsi.no-ip.org:8282/esferopolis/api/cuenta";
                     String idCuenta = this.enviarHttpRequest(urlCrearCuenta,"POST",jsonCrearCuenta);
                     //return jsonCrearCuenta.toString()+idCuenta;
-                    
-                    idCuenta = "4";
+                    */
+                    int idCuenta = 4;
                     
                     //luego crear cuenta en nuestro banco
-                    Cuenta nuevaCuenta = new Cuenta(1,idCliente);
-                    ejbCuentaFacade.create(nuevaCuenta);
+//                    Cuenta nuevaCuenta = new Cuenta(idCuenta,1,idCliente);
+                    JSONObject nuevaCuenta = new JSONObject().put("idCuenta",idCuenta).put("idCliente", idCliente).put("idTipoCuenta", 1);
+                    String cta = this.enviarHttpRequest("http://localhost:8080/tp2019/rest/cuenta","POST",nuevaCuenta);
+                    return (String) "Listo";
+                    /*
                     //cargo saldo inicial
                     //public Movimiento(int idCuentaOrigen,int idCuentaDestino, Float importe, Date fechaHora, int idTipoMovimiento, int estado)
                     Movimiento movSaldoInicial = new Movimiento(0,Integer.parseInt(idCuenta),Float.parseFloat(saldoInicial),new Date(),1,1);
 
                     ejbMovFacade.create(movSaldoInicial);
-
-                    return (String) "Listo";
+*/
                     
                 }else{
                     return (String) "No es apto";
