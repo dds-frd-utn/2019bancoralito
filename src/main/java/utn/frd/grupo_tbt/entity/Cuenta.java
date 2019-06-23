@@ -9,8 +9,6 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -34,10 +32,10 @@ public class Cuenta implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @NotNull
     @Column(name = "idCuenta")
-    private Integer idCuenta;
+    private int idCuenta;
     @Basic(optional = false)
     @NotNull
     @Column(name = "idTipoCuenta")
@@ -50,20 +48,21 @@ public class Cuenta implements Serializable {
     public Cuenta() {
     }
 
-    public Cuenta(Integer idCuenta) {
+    public Cuenta(int idCuenta) {
         this.idCuenta = idCuenta;
     }
 
-    public Cuenta(int idTipoCuenta, int idCliente) {
+    public Cuenta(int idCuenta, int idTipoCuenta, int idCliente) {
+        this.idCuenta = idCuenta;
         this.idTipoCuenta = idTipoCuenta;
         this.idCliente = idCliente;
     }
 
-    public Integer getIdCuenta() {
+    public int getIdCuenta() {
         return idCuenta;
     }
 
-    public void setIdCuenta(Integer idCuenta) {
+    public void setIdCuenta(int idCuenta) {
         this.idCuenta = idCuenta;
     }
 
@@ -83,13 +82,13 @@ public class Cuenta implements Serializable {
         this.idCliente = idCliente;
     }
 
+/*
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (idCuenta != null ? idCuenta.hashCode() : 0);
         return hash;
     }
-
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
@@ -102,7 +101,7 @@ public class Cuenta implements Serializable {
         }
         return true;
     }
-
+*/
     @Override
     public String toString() {
         return "utn.frd.grupo_tbt.entity.Cuenta[ idCuenta=" + idCuenta + " ]";
