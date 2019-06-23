@@ -40,6 +40,9 @@ import utn.frd.grupo_tbt.sessions.CuentaFacade;
 import utn.frd.grupo_tbt.sessions.MovimientoFacade;
 import java.io.IOException;
 import java.text.ParseException;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpServlet;
 
 //import javax.ws.rs.FormParam;
@@ -50,7 +53,12 @@ import javax.servlet.http.HttpServlet;
 */
 
 @Path("/cliente")
+@Named @RequestScoped
 public class ClienteRest extends HttpServlet{
+    @Inject
+    private CuentaFacade ejbCuentaFacade;
+    @Inject
+    private MovimientoFacade ejbMovFacade;
     public String enviarHttpRequest(String urlParam, String method, JSONObject jsonParam){
         try {
             URL url = new URL(urlParam);
@@ -108,27 +116,7 @@ public class ClienteRest extends HttpServlet{
         }
         
     }
-    /*
-    @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
 
-        String du = request.getParameter("du");
-        String saldoInicial = request.getParameter("saldoInicial");
-        String usuario = request.getParameter("usuario");
-        String contrasenia = request.getParameter("contrasenia");
-        String email = request.getParameter("email");
-        
-        out.println("Nombre: "+request.getParameter("du"));
-        
-        /*String peticionAlta = "{\"du\":"+du+",\"saldoInicial\":"+saldoInicial+",\"usuario\":"
-                + usuario+",\"constrasenia\":"+contrasenia+",\"email\":"+email;
-        
-        String respuesta = this.create(peticionAlta);
-        
-        response.getWriter().write(respuesta);
-        }*/
-    
     @EJB
     
     private ClienteFacade ejbClienteFacade;
@@ -169,13 +157,15 @@ public class ClienteRest extends HttpServlet{
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.TEXT_PLAIN})
-    public String altaCliente(String peticionAlta) throws JSONException, MalformedURLException, IOException{
+    public JSONObject altaCliente(String peticionAlta) throws JSONException, MalformedURLException, IOException{
+        JSONObject jsonRespuesta = new JSONObject();
         try{
             JSONObject jsonPeticionAlta = new JSONObject(peticionAlta);
-                
+    
             String du = jsonPeticionAlta.get("du").toString();
             int duInt = jsonPeticionAlta.getInt("du");
             //si no existe el cliente en nuestro banco
+            
             if(this.findByDu(duInt).getInt("flag_error") == 1){
                 String saldoInicial = jsonPeticionAlta.get("saldo").toString();
                 String usuario = jsonPeticionAlta.get("usuario").toString();
@@ -202,7 +192,6 @@ public class ClienteRest extends HttpServlet{
                     int idCliente = jsonNuevoCliente.getInt("idCliente");
 
                     //Creo cuenta en banco central
-      //Según la RTA de SERGIO
                     JSONObject jsonIdCuenta = new JSONObject("{\"id\":16}");
                     JSONObject jsonIdCiudadano = new JSONObject("{\"id\":"+du+"}");
                     
@@ -212,34 +201,39 @@ public class ClienteRest extends HttpServlet{
                     jsonCrearCuenta.put("saldo", saldoInicial);
                     
                     /*
+                    Cuando sergio devuelva el idCuenta, hacemos esto
                     String urlCrearCuenta = "http://lsi.no-ip.org:8282/esferopolis/api/cuenta";
                     String idCuenta = this.enviarHttpRequest(urlCrearCuenta,"POST",jsonCrearCuenta);
                     //return jsonCrearCuenta.toString()+idCuenta;
                     */
-                    int idCuenta = 4;
+                    String idCuenta = "4";
                     
                     //luego crear cuenta en nuestro banco
-//                    Cuenta nuevaCuenta = new Cuenta(idCuenta,1,idCliente);
-                    JSONObject nuevaCuenta = new JSONObject().put("idCuenta",idCuenta).put("idCliente", idCliente).put("idTipoCuenta", 1);
-                    String cta = this.enviarHttpRequest("http://localhost:8080/tp2019/rest/cuenta","POST",nuevaCuenta);
-                    return (String) "Listo";
-                    /*
-                    //cargo saldo inicial
+                    Cuenta nuevaCuenta = new Cuenta(Integer.parseInt(idCuenta),1,idCliente);
+                    ejbCuentaFacade.create(nuevaCuenta);
+                    
                     //public Movimiento(int idCuentaOrigen,int idCuentaDestino, Float importe, Date fechaHora, int idTipoMovimiento, int estado)
                     Movimiento movSaldoInicial = new Movimiento(0,Integer.parseInt(idCuenta),Float.parseFloat(saldoInicial),new Date(),1,1);
 
+                    //cargo saldo inicial
                     ejbMovFacade.create(movSaldoInicial);
-*/
+                    
+                    jsonRespuesta.put("flag_error", "0")
+                            .put("mensaje", "Registrado exitosamente.");
                     
                 }else{
-                    return (String) "No es apto";
-
+                    jsonRespuesta.put("flag_error", "1")
+                            .put("mensaje", "El cliente no es apto.");
                 }
             }else{
-                return (String)"El cliente ya existe";
+                jsonRespuesta.put("flag_error", "1")
+                            .put("mensaje", "El cliente ya existe.");            
             }
+            return jsonRespuesta;
         }catch(NumberFormatException | ParseException | JSONException e){
-            return e.getMessage();
+            jsonRespuesta.put("flag_error", "1")
+                    .put("mensaje", "Error inesperado: "+ e.getMessage());
+            return jsonRespuesta;
         }
     }
     
