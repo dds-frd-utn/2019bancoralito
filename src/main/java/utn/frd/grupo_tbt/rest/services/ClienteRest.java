@@ -4,14 +4,11 @@
  * and open the template in the editor.
  */
 package utn.frd.grupo_tbt.rest.services;
-import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.String;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
@@ -33,25 +30,17 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.Date;
-import javax.validation.constraints.Null;
 import utn.frd.grupo_tbt.entity.Cuenta;
 import utn.frd.grupo_tbt.entity.Movimiento;
 import utn.frd.grupo_tbt.sessions.CuentaFacade;
 import utn.frd.grupo_tbt.sessions.MovimientoFacade;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.ParseException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.FormParam;
 
 /**
@@ -166,7 +155,7 @@ public class ClienteRest extends HttpServlet{
      */
     @POST
     @Produces({MediaType.TEXT_PLAIN})
-    //public String doPost(HttpServletRequest request, String response) throws ServletException, IOException {
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String create(@FormParam("du") String du,
                         @FormParam("saldoInicial") String saldoInicial,
                         @FormParam("usuario") String usuario,
@@ -180,7 +169,6 @@ public class ClienteRest extends HttpServlet{
                 jsonPeticionAlta.put("usuario", usuario);
                 jsonPeticionAlta.put("contrasenia", contrasenia);
                 jsonPeticionAlta.put("email", email);
-            
             du = jsonPeticionAlta.get("du").toString();
             int duInt = jsonPeticionAlta.getInt("du");
             //si no existe el cliente en nuestro banco
