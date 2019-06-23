@@ -104,6 +104,7 @@ public String Transferencias(
         saldoDisponible = (Integer)foundEntity;
         
         
+        
         // Verifico si la cuenta de origen tiene el monto suficiente.
         if (saldoDisponible > valorTransferir){
                         
@@ -123,8 +124,8 @@ public String Transferencias(
                 transferencia.put("cuentaDestino", cuenta_destino);    
                 transferencia.put("importe", valorTransferir);
                 transferencia.put("fechaInicio", fechaActual );
-                transferencia.put("fechaFin", a );
-                transferencia.put("estado", a );
+                transferencia.put("fechaFin","");
+                transferencia.put("estado","");
             
          
             
@@ -132,6 +133,7 @@ public String Transferencias(
             
                 
         }
+        return null;
         
         
         
