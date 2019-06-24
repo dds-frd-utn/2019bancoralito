@@ -74,7 +74,7 @@ public class CuentaRest {
 /*
             return unaCuenta.toString();
 */
-        }catch(Exception e){
+        }catch(JSONException e){
             return e.getMessage();
         }
     }

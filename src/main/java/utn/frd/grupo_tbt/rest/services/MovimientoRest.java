@@ -6,10 +6,17 @@
 package utn.frd.grupo_tbt.rest.services;
 
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 
@@ -35,6 +42,44 @@ import utn.frd.grupo_tbt.sessions.MovimientoFacade;
 */
 @Path("/movimiento")
 public class MovimientoRest {
+    public String enviarHttpRequest(String urlParam, String method, JSONObject jsonParam){
+        try {
+            URL url = new URL(urlParam);
+
+            HttpURLConnection urlConnection = null;
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
+            if(jsonParam.length() >0){
+                urlConnection.setFixedLengthStreamingMode(jsonParam.toString().getBytes().length);
+            }
+            urlConnection.setRequestProperty(
+                                   "Content-Type", "application/json;charset=utf-8");
+            urlConnection.setRequestProperty("X-Requested-With", "XMLHttpRequest");
+            urlConnection.connect();
+            if(jsonParam.length() >0){
+                OutputStream os;
+                os = new BufferedOutputStream(urlConnection.getOutputStream());
+                os.write(jsonParam.toString().getBytes());
+                os.flush();
+            }
+            StringBuilder sBuilder;
+            InputStream inputStream;
+            inputStream= urlConnection.getInputStream();
+            
+            BufferedReader bReader = new BufferedReader(new InputStreamReader(inputStream, "utf-8"), 5);
+            sBuilder = new StringBuilder();
+            String line = null;
+            while ((line = bReader.readLine()) != null) {
+                sBuilder.append(line + "\n");
+            }
+            String texto = sBuilder.toString();
+            return texto;
+        } catch (IOException e) {
+           return e.getMessage();
+        }
+    }
     @EJB
     private MovimientoFacade ejbMovimientoFacade;
     
@@ -67,13 +112,7 @@ public class MovimientoRest {
         //la idea es que consulten los ultimos n movimientos
         return ejbMovimientoFacade.findAll(); //en vez de esto, armar una namedquery como en clienteRest y traer los ultimos segun la variable cantidad
     }
-
-@EJB
     
-    private CuentaFacade ejbCuentaFacade;
-
-    
-@Path("/movimientos")
 @POST
 @Produces({MediaType.TEXT_PLAIN})
 @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -83,22 +122,18 @@ public String Transferencias(
 	@FormParam("monto") String monto,
 	@FormParam("tipo_transferencia") String tipo_transferencia) throws JSONException{
 
-	
-        
-	int valorTransferir = Integer.parseInt(monto);
+	float valorTransferir = Float.parseFloat(monto);
 	int idCuenta = Integer.parseInt(cuenta_origen);
-        int saldoDisponible;
+        String respuesta = this.enviarHttpRequest("http://localhost:8080/tp2019/rest/cuenta/"+idCuenta,"POST",new JSONObject());
+        
+        float saldoDisponible = Float.parseFloat((new JSONObject(respuesta)).getString("saldo"));
         
         
         Date fechaActual = new Date();
         String urlTransferencia = "http://localhost:8080/esferopolis/api/transferencia";
         
         // Averiguo cual es el saldo actual de la cuenta origen.
-        Query query = ejbCuentaFacade.getEntityManager().createNamedQuery("Cuenta.saldoCuenta",Cuenta.class);
-        query.setParameter("idCuenta", idCuenta); 
-        List results = query.getResultList();      
-        Object foundEntity = results.get(0);       
-        saldoDisponible = (Integer)foundEntity;
+        
         
         
         
