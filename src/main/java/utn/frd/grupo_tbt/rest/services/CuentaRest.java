@@ -8,6 +8,8 @@ package utn.frd.grupo_tbt.rest.services;
 
 import java.util.List;
 import javax.ejb.EJB;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureQuery;
 import javax.ws.rs.Consumes;
 
 import javax.ws.rs.GET;
@@ -53,6 +55,28 @@ public class CuentaRest {
         
         
     }
+    @GET
+    @Path("/{idCuenta}")
+    @Produces({MediaType.TEXT_PLAIN})
+    public String infoCuenta(@PathParam("idCuenta") int id) throws JSONException{
+        try{
+            StoredProcedureQuery storedProcedure = ejbCuentaFacade.getEntityManager().createNamedStoredProcedureQuery("Cuenta.saldoCuenta");
+            storedProcedure.setParameter("idCuenta", id);
 
+            Cuenta unaCuenta = (Cuenta)storedProcedure.getSingleResult();
+            float saldoActual = unaCuenta.getSaldo();
+
+            JSONObject jsonCuenta = new JSONObject()
+                    .put("idCuenta", unaCuenta.getIdCuenta())
+                    .put("idCliente", unaCuenta.getIdCliente())
+                    .put("saldo", saldoActual);
+            return jsonCuenta.toString();
+/*
+            return unaCuenta.toString();
+*/
+        }catch(Exception e){
+            return e.getMessage();
+        }
+    }
 
 }

@@ -157,7 +157,7 @@ public class ClienteRest extends HttpServlet{
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.TEXT_PLAIN})
-    public JSONObject altaCliente(String peticionAlta) throws JSONException, MalformedURLException, IOException{
+    public String altaCliente(String peticionAlta) throws JSONException, MalformedURLException, IOException{
         JSONObject jsonRespuesta = new JSONObject();
         try{
             JSONObject jsonPeticionAlta = new JSONObject(peticionAlta);
@@ -229,11 +229,11 @@ public class ClienteRest extends HttpServlet{
                 jsonRespuesta.put("flag_error", "1")
                             .put("mensaje", "El cliente ya existe.");            
             }
-            return jsonRespuesta;
+            return jsonRespuesta.toString();
         }catch(NumberFormatException | ParseException | JSONException e){
             jsonRespuesta.put("flag_error", "1")
                     .put("mensaje", "Error inesperado: "+ e.getMessage());
-            return jsonRespuesta;
+            return jsonRespuesta.toString();
         }
     }
     

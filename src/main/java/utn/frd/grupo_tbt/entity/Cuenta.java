@@ -9,11 +9,13 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.NamedStoredProcedureQuery;
+import javax.persistence.ParameterMode;
+import javax.persistence.Query;
+import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -30,8 +32,15 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Cuenta.findByIdCuenta", query = "SELECT c FROM Cuenta c WHERE c.idCuenta = :idCuenta")
     , @NamedQuery(name = "Cuenta.findByIdTipoCuenta", query = "SELECT c FROM Cuenta c WHERE c.idTipoCuenta = :idTipoCuenta")
     , @NamedQuery(name = "Cuenta.findByIdCliente", query = "SELECT c FROM Cuenta c WHERE c.idCliente = :idCliente")
-    , @NamedQuery(name = "Cuenta.saldoCuenta", query = "SELECT c AS saldo FROM (SELECT f_saldoCuenta(:idCuenta)) c")
     })
+@NamedStoredProcedureQuery(
+        name="Cuenta.saldoCuenta",
+        procedureName="sp_saldoCuenta",
+        resultClasses = { Cuenta.class },
+        parameters={
+            @StoredProcedureParameter(name="idCuenta", type=Integer.class, mode=ParameterMode.IN)
+        }
+    )
 
 public class Cuenta implements Serializable {
 
@@ -50,6 +59,9 @@ public class Cuenta implements Serializable {
     @NotNull
     @Column(name = "idCliente")
     private int idCliente;
+    @Basic(optional = false)
+    @Column(name = "saldo")
+    private float saldo;
 
     public Cuenta() {
     }
@@ -72,6 +84,10 @@ public class Cuenta implements Serializable {
     public void setIdCuenta(int idCuenta) {
         this.idCuenta = idCuenta;
     }
+    public float getSaldo() {
+        return saldo;
+    }
+
 
     public int getIdTipoCuenta() {
         return idTipoCuenta;
