@@ -32,35 +32,48 @@ and open the template in the editor.
                   </div>
 
                   <!-- Login Form -->
-                  <form method="POST" action="http://localhost:8080/tp2019/rest/cliente">
+                  <form method="POST">
                     <input type="text" value="" id="usuario" class="fadeIn second" name="usuario" placeholder="usuario" autofocus="">
                     <input type="text" value="" id="contrasenia" class="fadeIn second" name="contrasenia" placeholder="contraseña">
                     <input type="text" value="" id="du" class="fadeIn second" name="du" placeholder="documento">
                     <input type="text" value="" id="saldoInicial" class="fadeIn second" name="saldoInicial" placeholder="saldo inicial">
                     <input type="text" value="" id="email" class="fadeIn second" name="email" placeholder="correo electronico">
-                    <input type="submit" id="btnIngresar" class="fadeIn fourth" value="Registrarse">
+                    <input type="submit" id="btnSubmit" class="fadeIn fourth" value="Registrarse">
                   </form>
             </div>
         </div>
-        <script src="https://code.jquery.com/jquery-2.2.2.min.js"></script>
-        <script src="js/enviar.js"></script>
-    <!--    <script>
-            $("#btnIngresar").click(function(){
-                event.preventDefault();
-                var user = $("#usuario").val();
-                let pass = $("#contrasenia").val();
+        <script>
+            $("#btnSubmit").click(function(event){
+                event.preventDefault(); //No ejecuta la accion predeterminada del boton
+                
+                var usuario = $("#usuario").val();
+                var contrasenia = $("#contrasenia").val();
                 var du = $("#du").val();
                 var saldoInicial = $("#saldoInicial").val();
                 var email = $("#email").val();
-                if(user === "" || pass === "" || du === "" || saldoInicial === "" || email === ""){
+                if(usuario === "" || contrasenia === "" || du === "" || saldoInicial === "" || email === ""){
                     alert("Por favor complete todos los campos");
                 } else {
-                    $("#btnIngresar").submit();
-                    
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:8080/tp2019/rest/cliente",
+                        data: {"du":du,"saldoInicial":saldoInicial,"usuario":usuario,"contrasenia":contrasenia,"email":email},
+                        dataType: "json",
+                        success: function(response){
+                            console.log(response.flag_error);
+                        },
+                        error:function(error){
+                            console.log(error);
+                        },
+                        then:function(){
+                            alert("Enviado");
+                        }
+                        
+                    });                    
                     alert("Datos enviados");
-                    
                 } 
+
             }); 
-        </script> -->
+        </script>
     </body>
 </html>
