@@ -90,13 +90,6 @@ public class MovimientoRest {
         return ejbMovimientoFacade.findAll();
     }
     
-    //crear entidades
-    @POST
-    @Consumes({MediaType.APPLICATION_JSON})
-    public void create(Movimiento movimiento){
-        //Registrar transferencia
-        
-    }
     //actualizar entidades
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
@@ -113,10 +106,10 @@ public class MovimientoRest {
         return ejbMovimientoFacade.findAll(); //en vez de esto, armar una namedquery como en clienteRest y traer los ultimos segun la variable cantidad
     }
     
-@POST
-@Produces({MediaType.TEXT_PLAIN})
-@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-public String Transferencias(
+    @POST
+    @Produces({MediaType.TEXT_PLAIN})
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public String Transferencias(
 	@FormParam("cuenta_origen") String cuenta_origen,
 	@FormParam("cuenta_destino") String cuenta_destino,
 	@FormParam("monto") String monto,
@@ -124,7 +117,7 @@ public String Transferencias(
 
 	float valorTransferir = Float.parseFloat(monto);
 	int idCuenta = Integer.parseInt(cuenta_origen);
-        String respuesta = this.enviarHttpRequest("http://localhost:8080/tp2019/rest/cuenta/"+idCuenta,"POST",new JSONObject());
+        String respuesta = this.enviarHttpRequest("http://localhost:8080/tp2019/rest/cuenta/"+idCuenta,"GET",new JSONObject());
         
         float saldoDisponible = Float.parseFloat((new JSONObject(respuesta)).getString("saldo"));
         
@@ -134,11 +127,8 @@ public String Transferencias(
         
         // Averiguo cual es el saldo actual de la cuenta origen.
         
-        
-        
-        
         // Verifico si la cuenta de origen tiene el monto suficiente.
-        if (saldoDisponible > valorTransferir){
+        if (saldoDisponible >= valorTransferir){
                         
             // si tipo_transferencia == 1 -> es una transferencia. 
             if (tipo_transferencia == "1"){
@@ -159,11 +149,6 @@ public String Transferencias(
                 transferencia.put("fechaFin","");
                 transferencia.put("estado","");
             
-         
-            
-            
-            
-                
         }
         return null;
         

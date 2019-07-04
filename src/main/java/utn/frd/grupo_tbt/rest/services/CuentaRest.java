@@ -8,13 +8,11 @@ package utn.frd.grupo_tbt.rest.services;
 
 import java.util.List;
 import javax.ejb.EJB;
-import javax.persistence.ParameterMode;
 import javax.persistence.StoredProcedureQuery;
 import javax.ws.rs.Consumes;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -63,13 +61,16 @@ public class CuentaRest {
             StoredProcedureQuery storedProcedure = ejbCuentaFacade.getEntityManager().createNamedStoredProcedureQuery("Cuenta.saldoCuenta");
             storedProcedure.setParameter("idCuenta", id);
 
-            Cuenta unaCuenta = (Cuenta)storedProcedure.getSingleResult();
-            float saldoActual = unaCuenta.getSaldo();
+//            String saldoActual = String.valueOf(unaCuenta.getSaldo());
 
+            storedProcedure.execute();
+            Double saldo = (Double) storedProcedure.getOutputParameterValue("p_saldo");
+            Cuenta unaCuenta = (Cuenta)storedProcedure.getSingleResult();
+            
             JSONObject jsonCuenta = new JSONObject()
                     .put("idCuenta", unaCuenta.getIdCuenta())
                     .put("idCliente", unaCuenta.getIdCliente())
-                    .put("saldo", saldoActual);
+                    .put("saldo", saldo);
             return jsonCuenta.toString();
 /*
             return unaCuenta.toString();

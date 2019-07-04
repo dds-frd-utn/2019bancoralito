@@ -17,6 +17,7 @@ import javax.persistence.ParameterMode;
 import javax.persistence.Query;
 import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -28,7 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "cuenta")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Cuenta.findAll", query = "SELECT c FROM Cuenta c")
+    @NamedQuery(name = "Cuenta.findAll", query = "SELECT c.idCuenta,c.idTipoCuenta,c.idCliente FROM Cuenta c")
     , @NamedQuery(name = "Cuenta.findByIdCuenta", query = "SELECT c FROM Cuenta c WHERE c.idCuenta = :idCuenta")
     , @NamedQuery(name = "Cuenta.findByIdTipoCuenta", query = "SELECT c FROM Cuenta c WHERE c.idTipoCuenta = :idTipoCuenta")
     , @NamedQuery(name = "Cuenta.findByIdCliente", query = "SELECT c FROM Cuenta c WHERE c.idCliente = :idCliente")
@@ -38,7 +39,8 @@ import javax.xml.bind.annotation.XmlRootElement;
         procedureName="sp_saldoCuenta",
         resultClasses = { Cuenta.class },
         parameters={
-            @StoredProcedureParameter(name="idCuenta", type=Integer.class, mode=ParameterMode.IN)
+            @StoredProcedureParameter(name="idCuenta", type=Integer.class, mode=ParameterMode.IN),
+            @StoredProcedureParameter(name="p_saldo", type=Float.class, mode=ParameterMode.OUT)
         }
     )
 
@@ -46,7 +48,6 @@ public class Cuenta implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-
     @Basic(optional = false)
     @NotNull
     @Column(name = "idCuenta")
@@ -59,9 +60,7 @@ public class Cuenta implements Serializable {
     @NotNull
     @Column(name = "idCliente")
     private int idCliente;
-    @Basic(optional = false)
-    @Column(name = "saldo")
-    private float saldo;
+
 
     public Cuenta() {
     }
@@ -84,10 +83,6 @@ public class Cuenta implements Serializable {
     public void setIdCuenta(int idCuenta) {
         this.idCuenta = idCuenta;
     }
-    public float getSaldo() {
-        return saldo;
-    }
-
 
     public int getIdTipoCuenta() {
         return idTipoCuenta;
