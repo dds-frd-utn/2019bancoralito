@@ -127,32 +127,6 @@ public class ClienteRest extends HttpServlet{
     public List<Cliente> findAll(){
     return ejbClienteFacade.findAll();
     }
-    //crear entidades
- /*
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String create(@FormParam("du") String du,
-                        @FormParam("saldoInicial") String saldoInicial,
-                        @FormParam("usuario") String usuario,
-                        @FormParam("contrasenia") String contrasenia,
-                        @FormParam("email") String email
-            ) throws JSONException, MalformedURLException, IOException{
-                JSONObject jsonPeticionAlta = new JSONObject();
-
-    jsonPeticionAlta.put("du", du);
-                jsonPeticionAlta.put("saldo", saldoInicial);
-                jsonPeticionAlta.put("usuario", usuario);
-                jsonPeticionAlta.put("contrasenia", contrasenia);
-                jsonPeticionAlta.put("email", email);
-      */
-
-    /**
-     *
-     * @param peticionAlta
-     * @return
-     * @throws JSONException
-     * @throws MalformedURLException
-     * @throws IOException
-     */
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
@@ -282,7 +256,37 @@ public class ClienteRest extends HttpServlet{
                 
                 return jsonError;
             }
+    }
+    @POST
+    @Path("/login") 
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.TEXT_PLAIN})
+    public String login(String peticion) throws JSONException{
+        JSONObject jsonRespuesta = new JSONObject();
+        try{
+            JSONObject jsonPeticion = new JSONObject(peticion);
+    
+            String usuario = jsonPeticion.get("usuario").toString();
+            String contrasenia = jsonPeticion.get("contrasenia").toString();
             
+            Query query =  ejbClienteFacade.getEntityManager().createQuery("SELECT c from Cliente c WHERE c.usuario='"+usuario+"' AND c.contrasenia = '"+contrasenia+"'");
+            Cliente resultado = (Cliente)query.getSingleResult();
             
+            jsonRespuesta.put("flag_error", "0")
+                    .put("usuario", usuario)
+                    .put("contrasenia", contrasenia)
+                    .put("du", resultado.getDu())
+                    .put("nombre", resultado.getNombre())
+                    .put("apellido", resultado.getApellido())
+                    .put("idCliente", resultado.getIdCliente())
+                    .put("idTipoCliente", resultado.getIdTipoCliente())
+                    ;
+            
+            return jsonRespuesta.toString();
+        }catch(NoResultException e){
+            jsonRespuesta.put("flag_error", "1")
+                    .put("mensaje", "No encontrado");
+            return jsonRespuesta.toString();
+        }
     }
 }

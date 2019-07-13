@@ -43,17 +43,59 @@ and open the template in the editor.
         <script>
             $("#btnIngresar").click(function(event){
                 event.preventDefault();
-                var user = $("#usuario").val();
+                let user = $("#usuario").val();
                 let pass = $("#password").val();
                 if(user == "" || pass == ""){
                     alert("Por favor ingrese su usuario y contraseña");
                 }else{
-                    location.href = "main.html";
+                    $.ajax({
+                        url:"http://localhost:8080/tp2019/rest/cliente/login",
+                        method:"post",
+                        data:JSON.stringify({"usuario":user,"contrasenia":pass}),
+                        dataType:"json",
+                        contentType:"application/json",
+                        async:false,
+                        success:function(myJson){
+                            console.log(myJson);
+                            if(myJson.flag_error == "0"){
+                                //guardar variables session
+                                realizarLogin(myJson);
+                            }else{
+                                alert("Datos incorrectos");
+                            }
+                        },
+                        error:function(error){
+                            alert("Ha ocurrido un error");
+                            console.log(error);
+                        }
+                    });
                     
                 }
             });
-        </script>
-        <script>
+            function realizarLogin(myJson){
+                let usuario = myJson.usuario;
+                let contrasenia = myJson.contrasenia;
+                let idCliente = myJson.idCliente;
+                let idTipoCliente = myJson.idTipoCliente;
+                let nombre = myJson.nombre;
+                let apellido = myJson.apellido;
+                let du = myJson.du;
+                
+                $.ajax({
+                    url:"http://localhost:8080/tp2019/CrearSession",
+                    type:"post",
+                    async:"false",
+                    data:{"usuario":usuario,"contrasenia":contrasenia,"idCliente":idCliente,"idTipoCliente":idTipoCliente,"nombre":nombre,"apellido":apellido,"du":du},
+                    success:function(response){
+                        console.log(response);
+                        location.href = "main.html";
+                    },
+                    error:function(error){
+                        alert("Se produjo un error de sesión");
+                        console.log(error);
+                    }
+                });
+            }
             $("#btnCrear").click(function(event){
                 event.preventDefault();
                     location.href = "new.html";
