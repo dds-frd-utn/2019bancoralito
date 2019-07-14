@@ -15,7 +15,7 @@ and open the template in the editor.
         <script src="../jquery/jquery.js"></script>
 
         
-        <style>
+        <style> 
             header{
                 height: 4em;
             }
@@ -36,10 +36,42 @@ and open the template in the editor.
         </div>
         <br>
         <div class="container">
-            <div class="d-flex flex-row bd-highlight mb-3">
-                <div class="p-3 bd-highlight opcion-menu row-menu display-none"></div>
+            <div class="d-flex flex-row bd-highlight mb-3" id="div-listado">
+                <div class="p-3 bd-highlight opcion-menu row-menu display-none" id="row-modelo"></div>
             </div>
         </div>
     <script src="../js/printNombre.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.ajax({
+                url:"http://localhost:8080/tp2019/VerSession",
+                type:"get",
+                async:"false",
+                dataType:"json",
+                success:function(myJson){
+                    let idCliente = myJson.idCliente;
+                    $.ajax({
+                        url:"http://localhost:8080/tp2019/rest/cuenta/listaCuentas/"+idCliente,
+                        type:"get",
+                        dataType:"json",
+                        success:function(jsonCuentas){
+                            $.each(jsonCuentas, function(key, val) {
+                                let row = $("#row-modelo").clone();
+                                row.html("Cuenta "+val.idCuenta+" : $"+val.saldo);
+                                row.removeClass("display-none");
+                                $("#div-listado").append(row);
+                                
+                            });
+                        }
+                    });
+                },
+                error:function(error){
+                    alert("Se produjo un error");
+                    console.log(error);
+                }
+            });
+            
+        });
+    </script>
     </body>
 </html>
