@@ -17,6 +17,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 
@@ -98,12 +99,35 @@ public class MovimientoRest {
         //Para cuando pasemos un movimiento de pendiente a realizado
     }
   
-    @Path("/ultimos/{cantidad}")
+    @Path("/ultimosMovimientos/{idCuenta}/{cantidad}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public List<Movimiento> findUltimos(@PathParam("cantidad")int cantidad){
-        //la idea es que consulten los ultimos n movimientos
-        return ejbMovimientoFacade.findAll(); //en vez de esto, armar una namedquery como en clienteRest y traer los ultimos segun la variable cantidad
+    public String listaMovimientos(@PathParam("idCuenta") int idCuenta,@PathParam("cantidad") int cantidad) throws JSONException{
+        try{
+            Query query = ejbMovimientoFacade.getEntityManager().createQuery("SELECT c from Movimiento c WHERE c.idCuentaOrigen = "+idCuenta +" OR c.idCuentaDestino ="+idCuenta+" order by c.fechaHora DESC");
+            List<Movimiento> listMov = query.getResultList();
+            
+            JSONObject jsonArray = new JSONObject();
+            JSONObject jsonElement;
+            String movString;
+            
+            for(Movimiento unMov : listMov){
+                jsonElement = new JSONObject()
+                        .put("idMovimiento", unMov.getIdMovimiento())
+                        .put("idCuentaOrigen", unMov.getIdCuentaOrigen())
+                        .put("idCuentaDestino", unMov.getIdCuentaDestino())
+                        .put("importe", unMov.getImporte())
+                        .put("fechaHora", unMov.getFechaHora())
+                        .put("estado", unMov.getEstado())
+                        ;
+                jsonArray.put(String.valueOf(unMov.getIdMovimiento()),jsonElement);
+            }
+            
+            return jsonArray.toString();
+
+        }catch(JSONException e){
+            return e.getMessage();
+        }
     }
     
     @POST

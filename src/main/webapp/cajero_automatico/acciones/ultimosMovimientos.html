@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>CAJERO AUTOMATICO BANCO RALITO</title>
+        <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+        <meta charset="UTF-8">
+        <link href="../css/all.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="../css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="../jquery/jquery.js"></script>
+
+        
+        <style> 
+            header{
+                height: 4em;
+            }
+            label{
+                opacity: initial;
+                color: black;
+            }
+            .mi-tabla{
+                width: -webkit-fill-available
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header-cajero">
+            <div class="row">
+                <h4>Últimos movimientos</h4>
+            </div>
+            <div class="row">
+                <h4 id="titleUsuario">[Información adicional]</h4>
+            </div>
+        </div>
+        <br>
+        <div class="container">
+            <div class="d-flex flex-row bd-highlight mb-3" id="div-listado">
+                <div class="p-3 bd-highlight opcion-menu row-menu display-none row-cuenta" id="row-modelo" style="height: auto">
+                    <h4></h4>
+                    <table class="mi-tabla">
+                        <tr id="tr-modelo">
+                            <td>Fecha</td>
+                            <td>Cuenta destino</td>
+                            <td>Estado</td>
+                            <td>Importe</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    <script src="../js/printNombre.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.ajax({
+                url:"http://localhost:8080/tp2019/VerSession",
+                type:"get",
+                async:"false",
+                dataType:"json",
+                success:function(myJson){
+                    let idCliente = myJson.idCliente;
+                    $.ajax({
+                        url:"http://localhost:8080/tp2019/rest/cuenta/listaCuentas/"+idCliente,
+                        type:"get",
+                        dataType:"json",
+                        success:function(jsonCuentas){
+                            $.each(jsonCuentas, function(key, val) {
+                                let row = $("#row-modelo").clone();
+                                row.find("h4").html("Cuenta "+val.idCuenta+" : $"+val.saldo);
+                                row.attr("idcuenta",val.idCuenta);
+                                row.removeClass("display-none");
+                                $("#div-listado").append(row);
+                            });
+                            $("#row-modelo").remove();
+
+                            traerUltimosMovimientos();
+                        }
+                    });
+                },
+                error:function(error){
+                    alert("Se produjo un error");
+                    console.log(error);
+                }
+            });
+            
+        });
+        function traerUltimosMovimientos(){
+            $(".row-cuenta").each(function(){
+                let idCuenta = $(this).attr("idcuenta");
+                let rowDiv = $(this);
+                $.ajax({
+                    url:"http://localhost:8080/tp2019/rest/movimiento/ultimosMovimientos/"+idCuenta+"/10",
+                    type:"get",
+                    dataType:"json",
+                    success:function(jsonMovimientos){
+                        console.log(jsonMovimientos);                        
+                        $.each(jsonMovimientos, function(key, val) {
+                            let tr = rowDiv.find("tr[id='tr-modelo']").clone();
+                            tr.attr("id","");
+                            tr.find("td").eq(0).html(val.fechaHora);
+                            tr.find("td").eq(1).html(val.idCuentaDestino);
+                            tr.find("td").eq(2).html(val.estado);
+                            
+                            if(idCuenta != val.idCuentaDestino){
+                                tr.find("td").eq(3).html("- "+val.importe);
+                            }else{
+                                tr.find("td").eq(3).html(val.importe);                            
+                            }
+                            rowDiv.find("table").append(tr);
+                        });
+                            rowDiv.removeClass("display-none");
+                        
+                    }
+                });
+            });
+        }
+    </script>
+    </body>
+</html>
