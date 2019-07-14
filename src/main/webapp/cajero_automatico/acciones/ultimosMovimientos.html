@@ -40,17 +40,17 @@ and open the template in the editor.
         <br>
         <div class="container">
             <div class="d-flex flex-row bd-highlight mb-3" id="div-listado">
-                <div class="p-3 bd-highlight opcion-menu row-menu display-none row-cuenta" id="row-modelo" style="height: auto">
-                    <h4></h4>
-                    <table class="mi-tabla">
-                        <tr id="tr-modelo">
-                            <td>Fecha</td>
-                            <td>Cuenta destino</td>
-                            <td>Estado</td>
-                            <td>Importe</td>
-                        </tr>
-                    </table>
-                </div>
+            </div>
+            <div class="p-3 bd-highlight opcion-menu row-menu display-none row-cuenta" id="row-modelo" style="height: auto">
+                <h4></h4>
+                <table class="mi-tabla">
+                    <tr id="tr-modelo">
+                        <td>Fecha</td>
+                        <td>Cuenta destino</td>
+                        <td>Estado</td>
+                        <td>Importe</td>
+                    </tr>
+                </table>
             </div>
         </div>
     <script src="../js/printNombre.js"></script>
@@ -73,7 +73,9 @@ and open the template in the editor.
                                 row.find("h4").html("Cuenta "+val.idCuenta+" : $"+val.saldo);
                                 row.attr("idcuenta",val.idCuenta);
                                 row.removeClass("display-none");
-                                $("#div-listado").append(row);
+
+                                let nuevaRow = $("#div-listado").clone().append(row);
+                                $(".container").append(nuevaRow);
                             });
                             $("#row-modelo").remove();
 

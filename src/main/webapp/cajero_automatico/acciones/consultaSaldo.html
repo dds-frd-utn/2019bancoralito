@@ -59,7 +59,10 @@ and open the template in the editor.
                                 let row = $("#row-modelo").clone();
                                 row.html("Cuenta "+val.idCuenta+" : $"+val.saldo);
                                 row.removeClass("display-none");
-                                $("#div-listado").append(row);
+                                
+                                
+                                let nuevaRow = $("#div-listado").clone().append(row);
+                                $(".container").append(nuevaRow);
                                 
                             });
                         }
