@@ -129,6 +129,47 @@ public class MovimientoRest {
             return e.getMessage();
         }
     }
+
+    @Path("/transferenciaspendientes")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String transferenciaspendientes(){
+        
+        String resultado = this.findByEstado(2);
+        
+        return resultado;
+    }
+    
+    @Path("/estado/{estado}")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    private String findByEstado(@PathParam("estado") int  estado) {
+        try{
+            Query query = ejbMovimientoFacade.getEntityManager().createQuery("SELECT c FROM Movimiento c WHERE c.estado = "+estado);
+            List<Movimiento> listMov = query.getResultList();
+            
+            JSONObject jsonArray = new JSONObject();
+            JSONObject jsonElement;
+            String movString;
+            
+            for(Movimiento unMov : listMov){
+                jsonElement = new JSONObject()
+                        .put("idMovimiento", unMov.getIdMovimiento())
+                        .put("idCuentaOrigen", unMov.getIdCuentaOrigen())
+                        .put("idCuentaDestino", unMov.getIdCuentaDestino())
+                        .put("importe", unMov.getImporte())
+                        .put("fechaHora", unMov.getFechaHora())
+                        .put("estado", "PENDIENTE")
+                        ;
+                jsonArray.put(String.valueOf(unMov.getIdMovimiento()),jsonElement);
+            }
+            
+            return jsonArray.toString();
+
+        }catch(JSONException e){
+            return e.getMessage();
+        }
+    }
     
     @POST
     @Produces({MediaType.TEXT_PLAIN})
@@ -175,22 +216,5 @@ public class MovimientoRest {
             
         }
         return null;
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-
-	
-
-
+    }
 }
-}
-
