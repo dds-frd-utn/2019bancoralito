@@ -30,4 +30,9 @@ body{
     background-color:lavender;
     opacity: 0.85;
 }
-
+.row-menu{
+    width: 100%
+}
+.display-none{
+    display:none
+}

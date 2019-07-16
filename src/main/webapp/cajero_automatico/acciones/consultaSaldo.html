@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>CAJERO AUTOMATICO BANCO RALITO</title>
+        <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+        <meta charset="UTF-8">
+        <link href="../css/all.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="../css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="../jquery/jquery.js"></script>
+
+        
+        <style> 
+            header{
+                height: 4em;
+            }
+            label{
+                opacity: initial;
+                color: black;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header-cajero">
+            <div class="row">
+                <h4>Consulta de saldo</h4>
+            </div>
+            <div class="row">
+                <h4 id="titleUsuario">[Información adicional]</h4>
+            </div>
+        </div>
+        <br>
+        <div class="container">
+            <div class="d-flex flex-row bd-highlight mb-3" id="div-listado">
+                <div class="p-3 bd-highlight opcion-menu row-menu display-none" id="row-modelo"></div>
+            </div>
+        </div>
+    <script src="../js/printNombre.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.ajax({
+                url:"http://localhost:8080/tp2019/VerSession",
+                type:"get",
+                async:"false",
+                dataType:"json",
+                success:function(myJson){
+                    let idCliente = myJson.idCliente;
+                    $.ajax({
+                        url:"http://localhost:8080/tp2019/rest/cuenta/listaCuentas/"+idCliente,
+                        type:"get",
+                        dataType:"json",
+                        success:function(jsonCuentas){
+                            $.each(jsonCuentas, function(key, val) {
+                                let row = $("#row-modelo").clone();
+                                row.html("Cuenta "+val.idCuenta+" : $"+val.saldo);
+                                row.removeClass("display-none");
+                                
+                                
+                                let nuevaRow = $("#div-listado").clone().append(row);
+                                $(".container").append(nuevaRow);
+                                
+                            });
+                        }
+                    });
+                },
+                error:function(error){
+                    alert("Se produjo un error");
+                    console.log(error);
+                }
+            });
+            
+        });
+    </script>
+    </body>
+</html>

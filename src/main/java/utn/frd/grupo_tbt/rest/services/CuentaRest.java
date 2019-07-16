@@ -8,6 +8,7 @@ package utn.frd.grupo_tbt.rest.services;
 
 import java.util.List;
 import javax.ejb.EJB;
+import javax.persistence.Query;
 import javax.persistence.StoredProcedureQuery;
 import javax.ws.rs.Consumes;
 
@@ -19,6 +20,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.json.JSONException;
 import org.json.JSONObject;
+import utn.frd.grupo_tbt.entity.Cliente;
 import utn.frd.grupo_tbt.entity.Cuenta;
 import utn.frd.grupo_tbt.sessions.CuentaFacade;
 
@@ -61,8 +63,6 @@ public class CuentaRest {
             StoredProcedureQuery storedProcedure = ejbCuentaFacade.getEntityManager().createNamedStoredProcedureQuery("Cuenta.saldoCuenta");
             storedProcedure.setParameter("idCuenta", id);
 
-//            String saldoActual = String.valueOf(unaCuenta.getSaldo());
-
             storedProcedure.execute();
             Double saldo = (Double) storedProcedure.getOutputParameterValue("p_saldo");
             Cuenta unaCuenta = (Cuenta)storedProcedure.getSingleResult();
@@ -72,9 +72,29 @@ public class CuentaRest {
                     .put("idCliente", unaCuenta.getIdCliente())
                     .put("saldo", saldo);
             return jsonCuenta.toString();
-/*
-            return unaCuenta.toString();
-*/
+
+        }catch(JSONException e){
+            return e.getMessage();
+        }
+    }
+    @GET
+    @Path("/listaCuentas/{idCliente}")
+    @Produces({MediaType.TEXT_PLAIN})
+    public String listaCuentas(@PathParam("idCliente") int idCliente) throws JSONException{
+        try{
+            Query query = ejbCuentaFacade.getEntityManager().createQuery("SELECT c from Cuenta c WHERE c.idCliente = "+idCliente);
+            JSONObject jsonArray = new JSONObject();
+            List<Cuenta> listCuentas = query.getResultList();
+            String cuentaString;
+            for(Cuenta unaCuenta : listCuentas){
+
+                cuentaString = this.infoCuenta(unaCuenta.getIdCuenta());
+                
+                jsonArray.put(String.valueOf(unaCuenta.getIdCuenta()),new JSONObject(cuentaString));
+            }
+            
+            return jsonArray.toString();
+
         }catch(JSONException e){
             return e.getMessage();
         }

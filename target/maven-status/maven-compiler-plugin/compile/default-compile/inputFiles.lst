@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C:\Users\tomas\OneDrive\Escritorio\dds\tp2019\src\main\java\utn\frd\grupo_tbt\entity\Cliente.java
 C:\Users\tomas\OneDrive\Escritorio\dds\tp2019\src\main\java\utn\frd\grupo_tbt\rest\services\ClienteRest.java
 C:\Users\tomas\OneDrive\Escritorio\dds\tp2019\src\main\java\utn\frd\grupo_tbt\sessions\MovimientoFacade.java
@@ -9,3 +10,18 @@ C:\Users\tomas\OneDrive\Escritorio\dds\tp2019\src\main\java\utn\frd\grupo_tbt\re
 C:\Users\tomas\OneDrive\Escritorio\dds\tp2019\src\main\java\utn\frd\grupo_tbt\entity\Movimiento.java
 C:\Users\tomas\OneDrive\Escritorio\dds\tp2019\src\main\java\utn\frd\grupo_tbt\sessions\ClienteFacade.java
 C:\Users\tomas\OneDrive\Escritorio\dds\tp2019\src\main\java\utn\frd\grupo_tbt\sessions\AbstractFacade.java
+=======
+C:\Users\Timoteo\Documents\MEGAsync\Diseño de Sistemas\RepoGitLab\tp2019\src\main\java\utn\frd\grupo_tbt\sessions\AbstractFacade.java
+C:\Users\Timoteo\Documents\MEGAsync\Diseño de Sistemas\RepoGitLab\tp2019\src\main\java\utn\frd\grupo_tbt\rest\services\ApplicationConfig.java
+C:\Users\Timoteo\Documents\MEGAsync\Diseño de Sistemas\RepoGitLab\tp2019\src\main\java\utn\frd\grupo_tbt\rest\services\MovimientoRest.java
+C:\Users\Timoteo\Documents\MEGAsync\Diseño de Sistemas\RepoGitLab\tp2019\src\main\java\utn\frd\grupo_tbt\entity\Cliente.java
+C:\Users\Timoteo\Documents\MEGAsync\Diseño de Sistemas\RepoGitLab\tp2019\src\main\java\utn\frd\grupo_tbt\rest\services\ClienteRest.java
+C:\Users\Timoteo\Documents\MEGAsync\Diseño de Sistemas\RepoGitLab\tp2019\src\main\java\utn\frd\grupo_tbt\sessions\ClienteFacade.java
+C:\Users\Timoteo\Documents\MEGAsync\Diseño de Sistemas\RepoGitLab\tp2019\src\main\java\utn\frd\grupo_tbt\sessions\CuentaFacade.java
+C:\Users\Timoteo\Documents\MEGAsync\Diseño de Sistemas\RepoGitLab\tp2019\src\main\java\utn\frd\grupo_tbt\entity\Cuenta.java
+C:\Users\Timoteo\Documents\MEGAsync\Diseño de Sistemas\RepoGitLab\tp2019\src\main\java\utn\frd\grupo_tbt\servlet\CrearSession.java
+C:\Users\Timoteo\Documents\MEGAsync\Diseño de Sistemas\RepoGitLab\tp2019\src\main\java\utn\frd\grupo_tbt\rest\services\CuentaRest.java
+C:\Users\Timoteo\Documents\MEGAsync\Diseño de Sistemas\RepoGitLab\tp2019\src\main\java\utn\frd\grupo_tbt\entity\Movimiento.java
+C:\Users\Timoteo\Documents\MEGAsync\Diseño de Sistemas\RepoGitLab\tp2019\src\main\java\utn\frd\grupo_tbt\servlet\VerSession.java
+C:\Users\Timoteo\Documents\MEGAsync\Diseño de Sistemas\RepoGitLab\tp2019\src\main\java\utn\frd\grupo_tbt\sessions\MovimientoFacade.java
+>>>>>>> 198fad39b8d00fabfc75729c1d29b26b03093eb2
