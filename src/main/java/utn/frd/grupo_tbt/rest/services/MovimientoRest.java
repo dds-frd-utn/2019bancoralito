@@ -127,20 +127,13 @@ public class MovimientoRest {
         
         // Averiguo cual es el saldo actual de la cuenta origen.
         
-        // Verifico si la cuenta de origen tiene el monto suficiente.
-        if (saldoDisponible >= valorTransferir){
-                        
-            // si tipo_transferencia == 1 -> es una transferencia. 
-            if (tipo_transferencia == "1"){
-                                               
-            }
-            
-            // si tipo_transferencia == 2 -> es una venta (hay impuesto). 
-            if (tipo_transferencia == "2"){
+       
+        
+        // si tipo_transferencia == 2 -> es una transferencia. 
+        if ("2".equals(tipo_transferencia)){
+            // Verifico si la cuenta de origen tiene el monto suficiente.
+            if (saldoDisponible >= valorTransferir){
                 
-            }    
-            
-            // envio el json con la transferencia al banco central.
             JSONObject transferencia = new JSONObject();
                 transferencia.put("cuentaOrigen", idCuenta);
                 transferencia.put("cuentaDestino", cuenta_destino);    
@@ -148,9 +141,65 @@ public class MovimientoRest {
                 transferencia.put("fechaInicio", fechaActual );
                 transferencia.put("fechaFin","");
                 transferencia.put("estado","");
+                transferencia.put("idTipoMovimiento","2");
+                
+                
+            }               
+        }
+            
+        // si tipo_transferencia == 3 -> es una venta (hay impuesto). 
+        if ("3".equals(tipo_transferencia)){
+                
+                
+            
+            String devolucion;
+            double impuesto;
+            
+            // paso a la variable String devolucion el contenido del json impuesto
+            devolucion = enviarHttpRequest("http://lsi.no-ip.org:8282/esferopolis/api/impuesto", "GET", new JSONObject () ); 
+            
+            // convierto el resultado en un JSON
+            JSONObject resultado = new JSONObject(devolucion);
+            
+            // del JSON obtengo el valor impuesto en forma de double
+            String impuestoString = (String) resultado.get("porcentaje");
+            impuesto = Double.parseDouble(impuestoString);
+            
+            if (saldoDisponible < (valorTransferir * (impuesto/100 + 1))){
+             } else {
+                JSONObject transferencia = new JSONObject();
+                transferencia.put("cuentaOrigen", idCuenta);
+                transferencia.put("cuentaDestino", cuenta_destino);    
+                transferencia.put("importe", valorTransferir);
+                transferencia.put("fechaInicio", fechaActual );
+                transferencia.put("fechaFin","");
+                transferencia.put("estado","");
+                transferencia.put("idTipoMovimiento","3"); 
+                
+                ejbMovimientoFacade.create(transferencia);
+                
+                
+                double impuestoTotal;
+                impuestoTotal = (valorTransferir * (impuesto/100));
+                
+                JSONObject impuestoTransferencia = new JSONObject();
+                transferencia.put("cuentaOrigen", idCuenta);
+                transferencia.put("cuentaDestino", cuenta_destino);    
+                transferencia.put("importe", impuestoTotal);
+                transferencia.put("fechaInicio", fechaActual );
+                transferencia.put("fechaFin","");
+                transferencia.put("estado","");
+                transferencia.put("idTipoMovimiento","5");
+                
+                 ejbMovimientoFacade.create(impuestoTransferencia);
+            }
+        
+        }
+            // envio el json con la transferencia al banco central.
+            
             
         }
-        return null;
+       
         
         
         
