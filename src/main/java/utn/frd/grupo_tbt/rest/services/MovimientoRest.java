@@ -136,26 +136,27 @@ public class MovimientoRest {
     @Produces({MediaType.APPLICATION_JSON})
     public String transferenciaspendientes() throws JSONException {
         
-        String resultado = this.findByEstado(1);
+        JSONArray resultado = this.findByEstado(1);
         
         //Identificar cada elemento de la lista y actualizarlo en la DB, preferentemente despues de enviarlos
         //Acomodar los campos del JSON que se envía a BC
                 
-        JSONArray jsonArray = new JSONArray(resultado);
+        //JSONArray jsonArray = new JSONArray(resultado);
         JSONArray jsonResultado = new JSONArray();
 
-        for (int i = 0; i < jsonArray.length(); i++) {
+        for (int i = 0; i < resultado.length(); i++) {
             
             //Toma cada movimiento pendiente de envio
-            JSONObject object = jsonArray.getJSONObject(i);
+            JSONObject object = resultado.getJSONObject(i);
             
             //Preparo para persistir en DB
             Integer idMovimiento = (Integer) object.get("idMovimiento");
             Integer idCuentaOrigen = (Integer) object.get("idCuentaOrigen");
             Integer idCuentaDestino = (Integer) object.get("idCuentaDestino");
-            Integer Importe = (Integer) object.get("Importe");
+            Float Importe = (Float) object.get("importe");
                     
-            Movimiento actualizoEstado = new Movimiento(
+            Movimiento actualizoEstado;
+            actualizoEstado = new Movimiento(
                     idMovimiento,
                     idCuentaOrigen,
                     idCuentaDestino,
@@ -167,7 +168,7 @@ public class MovimientoRest {
             //Persisto en DB
             ejbMovimientoFacade.edit(actualizoEstado);
             
-            //Preparo para enviar respuesta
+            //Preparo para enviar respuesta a BC
             
                         JSONObject jsonElement = new JSONObject()
                         .put("cuentaOrigen", object.get("idCuentaOrigen") )
@@ -188,8 +189,8 @@ public class MovimientoRest {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     //private String findByEstado(@PathParam("estado") int  estado) {
-    private String findByEstado(int  estado) {
-        try{
+    private JSONArray findByEstado(int  estado) throws JSONException {
+        
             Query query = ejbMovimientoFacade.getEntityManager().createQuery("SELECT c FROM Movimiento c WHERE c.estado = "+estado);
             List<Movimiento> listMov = query.getResultList();
             
@@ -209,11 +210,9 @@ public class MovimientoRest {
                 jsonArray.put(jsonElement);
             }
             
-            return jsonArray.toString();
+            return jsonArray;
 
-        }catch(JSONException e){
-            return e.getMessage();
-        }
+        
     }
     
     @POST

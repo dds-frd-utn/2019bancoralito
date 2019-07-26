@@ -84,7 +84,7 @@ public class Movimiento implements Serializable {
         this.estado = estado;
     }
 
-    public Movimiento(Integer idMovimiento, Integer idCuentaOrigen, Integer idCuentaDestino, Integer Importe, Object get, int i) {
+    public Movimiento(Integer idMovimiento, Integer idCuentaOrigen, Integer idCuentaDestino, Float Importe, Object get, int i) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
