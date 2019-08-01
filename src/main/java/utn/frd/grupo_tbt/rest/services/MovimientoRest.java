@@ -131,20 +131,25 @@ public class MovimientoRest {
         }
     }
 
+    /**
+     *
+     * @return
+     * @throws JSONException
+     */
     @Path("/transferenciaspendientes")
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.TEXT_PLAIN})
     public String transferenciaspendientes() throws JSONException {
         
-        JSONArray resultado = this.findByEstado(1);
+        String resultado = this.findByEstado('1');
         
         //Identificar cada elemento de la lista y actualizarlo en la DB, preferentemente despues de enviarlos
         //Acomodar los campos del JSON que se envía a BC
                 
         //JSONArray jsonArray = new JSONArray(resultado);
-        JSONArray jsonResultado = new JSONArray();
+        //JSONArray jsonResultado = new JSONArray();
 
-        for (int i = 0; i < resultado.length(); i++) {
+/*        for (int i = 0; i < resultado.length(); i++) {
             
             //Toma cada movimiento pendiente de envio
             JSONObject object = resultado.getJSONObject(i);
@@ -155,7 +160,7 @@ public class MovimientoRest {
             Integer idCuentaDestino = (Integer) object.get("idCuentaDestino");
             Float Importe = (Float) object.get("importe");
                     
-            Movimiento actualizoEstado;
+          /*  Movimiento actualizoEstado;
             actualizoEstado = new Movimiento(
                     idMovimiento,
                     idCuentaOrigen,
@@ -166,7 +171,7 @@ public class MovimientoRest {
             );
             
             //Persisto en DB
-            ejbMovimientoFacade.edit(actualizoEstado);
+            ejbMovimientoFacade.edit(actualizoEstado); 
             
             //Preparo para enviar respuesta a BC
             
@@ -180,17 +185,23 @@ public class MovimientoRest {
             ;
                         
             jsonResultado.put(jsonElement);
-        }
+        }*/
         
-        return jsonResultado.toString();
+        return resultado;
     }
     
-    //@Path("/estado/{estado}")
+    /**
+     *
+     * @param estado
+     * @return
+     * @throws JSONException
+     */
+    @Path("/estado/{estado}")
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    //private String findByEstado(@PathParam("estado") int  estado) {
-    private JSONArray findByEstado(int  estado) throws JSONException {
-        
+    @Produces({MediaType.TEXT_PLAIN})
+    public String findByEstado(@PathParam("estado") int  estado) throws JSONException {
+    //public String findByEstado(int  estado) throws JSONException {
+        try{
             Query query = ejbMovimientoFacade.getEntityManager().createQuery("SELECT c FROM Movimiento c WHERE c.estado = "+estado);
             List<Movimiento> listMov = query.getResultList();
             
@@ -210,9 +221,10 @@ public class MovimientoRest {
                 jsonArray.put(jsonElement);
             }
             
-            return jsonArray;
-
-        
+            return jsonArray.toString();
+        }catch(JSONException e){
+            return e.getMessage();
+        }
     }
     
     @POST

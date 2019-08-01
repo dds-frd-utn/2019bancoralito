@@ -38,7 +38,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Movimiento.findByIdTipoMovimiento", query = "SELECT m FROM Movimiento m WHERE m.idTipoMovimiento = :idTipoMovimiento")})
 public class Movimiento implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
