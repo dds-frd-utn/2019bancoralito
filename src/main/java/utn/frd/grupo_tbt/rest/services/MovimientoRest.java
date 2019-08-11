@@ -28,6 +28,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import utn.frd.grupo_tbt.entity.Cuenta;
@@ -129,6 +130,102 @@ public class MovimientoRest {
             return e.getMessage();
         }
     }
+
+    /**
+     *
+     * @return
+     * @throws JSONException
+     */
+    @Path("/transferenciaspendientes")
+    @GET
+    @Produces({MediaType.TEXT_PLAIN})
+    public String transferenciaspendientes() throws JSONException {
+        
+        String resultado = this.findByEstado('1');
+        
+        //Identificar cada elemento de la lista y actualizarlo en la DB, preferentemente despues de enviarlos
+        //Acomodar los campos del JSON que se envía a BC
+                
+        //JSONArray jsonArray = new JSONArray(resultado);
+        //JSONArray jsonResultado = new JSONArray();
+
+/*        for (int i = 0; i < resultado.length(); i++) {
+            
+            //Toma cada movimiento pendiente de envio
+            JSONObject object = resultado.getJSONObject(i);
+            
+            //Preparo para persistir en DB
+            Integer idMovimiento = (Integer) object.get("idMovimiento");
+            Integer idCuentaOrigen = (Integer) object.get("idCuentaOrigen");
+            Integer idCuentaDestino = (Integer) object.get("idCuentaDestino");
+            Float Importe = (Float) object.get("importe");
+                    
+          /*  Movimiento actualizoEstado;
+            actualizoEstado = new Movimiento(
+                    idMovimiento,
+                    idCuentaOrigen,
+                    idCuentaDestino,
+                    Importe,
+                    object.get("fechaHora"),
+                    2
+            );
+            
+            //Persisto en DB
+            ejbMovimientoFacade.edit(actualizoEstado); 
+            
+            //Preparo para enviar respuesta a BC
+            
+                        JSONObject jsonElement = new JSONObject()
+                        .put("cuentaOrigen", object.get("idCuentaOrigen") )
+                        .put("cuentaDestino", object.get("idCuentaDestino"))
+                        .put("importe", object.get("importe"))
+                        .put("fechaInicio", object.get("fechaHora"))
+                        .put("fechaFin", "")
+                        .put("estado", "PENDIENTE")
+            ;
+                        
+            jsonResultado.put(jsonElement);
+        }*/
+        
+        return resultado;
+    }
+    
+    /**
+     *
+     * @param estado
+     * @return
+     * @throws JSONException
+     */
+    @Path("/estado/{estado}")
+    @GET
+    @Produces({MediaType.TEXT_PLAIN})
+    public String findByEstado(@PathParam("estado") int  estado) throws JSONException {
+    //public String findByEstado(int  estado) throws JSONException {
+        try{
+            Query query = ejbMovimientoFacade.getEntityManager().createQuery("SELECT c FROM Movimiento c WHERE c.estado = "+estado);
+            List<Movimiento> listMov = query.getResultList();
+            
+            JSONArray jsonArray = new JSONArray();
+            JSONObject jsonElement;
+            String movString;
+            
+            for(Movimiento unMov : listMov){
+                jsonElement = new JSONObject()
+                        .put("idMovimiento", unMov.getIdMovimiento())
+                        .put("idCuentaOrigen", unMov.getIdCuentaOrigen())
+                        .put("idCuentaDestino", unMov.getIdCuentaDestino())
+                        .put("importe", unMov.getImporte())
+                        .put("fechaHora", unMov.getFechaHora())
+                        .put("estado", unMov.getEstado())
+                        ;
+                jsonArray.put(jsonElement);
+            }
+            
+            return jsonArray.toString();
+        }catch(JSONException e){
+            return e.getMessage();
+        }
+    }
     
     @POST
     @Path("/realizar")
@@ -140,7 +237,6 @@ public class MovimientoRest {
         int cuenta_destino = jsonPeticion.getInt("cuenta_destino");
         int tipo_movimiento = jsonPeticion.getInt("tipo_movimiento");
         float monto = Float.parseFloat(jsonPeticion.getString("monto"));
-            
         //Declaro variables
         float porcImpuesto = 0;
         float valorImpuesto = 0;

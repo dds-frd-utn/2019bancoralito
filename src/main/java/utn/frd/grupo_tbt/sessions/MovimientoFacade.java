@@ -8,6 +8,7 @@ package utn.frd.grupo_tbt.sessions;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.json.JSONObject;
 import utn.frd.grupo_tbt.entity.Movimiento;
 
 /**
@@ -27,6 +28,10 @@ public class MovimientoFacade extends AbstractFacade<Movimiento> {
 
     public MovimientoFacade() {
         super(Movimiento.class);
+    }
+
+    public void create(JSONObject transferencia) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
