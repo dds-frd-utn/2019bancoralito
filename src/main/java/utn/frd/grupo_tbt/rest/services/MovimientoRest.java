@@ -187,7 +187,6 @@ public class MovimientoRest {
                                 transferencia.put("fechaInicio", fechaActual );
                                 transferencia.put("fechaFin","");
                                 transferencia.put("estado","COMPLETA");
-                            
                             String respuestaTrans = this.enviarHttpRequest("http://lsi.no-ip.org:8282/esferopolis/api/transferencia","POST",transferencia);
                             str += " | rta trans "+ respuestaTrans;
 
