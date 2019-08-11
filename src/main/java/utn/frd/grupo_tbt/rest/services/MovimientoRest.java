@@ -131,66 +131,83 @@ public class MovimientoRest {
     }
     
     @POST
+    @Path("/realizar")
     @Produces({MediaType.TEXT_PLAIN})
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String Transferencias(
-	@FormParam("cuenta_origen") String cuenta_origen,
-	@FormParam("cuenta_destino") String cuenta_destino,
-	@FormParam("monto") String monto,
-	@FormParam("tipo_transferencia") String tipo_transferencia) throws JSONException{
+    @Consumes({MediaType.TEXT_PLAIN})
+    public String registrarMovimiento(String peticionInicial) throws JSONException{
+        JSONObject jsonPeticion = new JSONObject(peticionInicial);
+        int cuenta_origen = jsonPeticion.getInt("cuenta_origen");
+        int cuenta_destino = jsonPeticion.getInt("cuenta_destino");
+        int tipo_movimiento = jsonPeticion.getInt("tipo_movimiento");
+        float monto = Float.parseFloat(jsonPeticion.getString("monto"));
+            
+        //Declaro variables
+        float porcImpuesto = 0;
+        float valorImpuesto = 0;
+        String str = "";
+        if(monto > 0){
+            try{
+                str += "valor > 0";
+                if(tipo_movimiento == 2 || tipo_movimiento == 1){
+                    str += " | mov 2 o 1";
+                    //Si es compra-venta, consulto el valor del impuesto
+                    if(tipo_movimiento == 2){
+                        str += " | mov es 2";
+                        String respuestaImpuesto = this.enviarHttpRequest("http://lsi.no-ip.org:8282/esferopolis/api/impuesto","GET",new JSONObject());
+                        porcImpuesto = Float.parseFloat((new JSONObject(respuestaImpuesto)).getString("porcentaje"));
+                        valorImpuesto = monto * porcImpuesto / 100;
+                    }   
+                    // Averiguo cual es el saldo actual de la cuenta origen.
+                    String respuesta = this.enviarHttpRequest("http://localhost:8080/tp2019/rest/cuenta/"+cuenta_origen,"GET",new JSONObject());
+                    float saldoDisponible = Float.parseFloat((new JSONObject(respuesta)).getString("saldo"));
+                    str += "| saldo " +(new JSONObject(respuesta)).getString("saldo");
+                    float importeFinal = monto + valorImpuesto;
+                    if (saldoDisponible >= importeFinal){
+                        str += " | entro if saldo disponible";
+                        //Consulto si la cuenta destino pertenece a mi banco
+                        String cuentaDestino = this.enviarHttpRequest("http://localhost:8080/tp2019/rest/cuenta/"+cuenta_destino,"GET",new JSONObject());
+                        String flagErrorCtaDestino = new JSONObject(cuentaDestino).getString("flag_error");
+                        //0:la encontró, 1:no la encontró (es de otro banco)
 
-	float valorTransferir = Float.parseFloat(monto);
-	int idCuenta = Integer.parseInt(cuenta_origen);
-        String respuesta = this.enviarHttpRequest("http://localhost:8080/tp2019/rest/cuenta/"+idCuenta,"GET",new JSONObject());
-        
-        float saldoDisponible = Float.parseFloat((new JSONObject(respuesta)).getString("saldo"));
-        
-        
-        Date fechaActual = new Date();
-        String urlTransferencia = "http://localhost:8080/esferopolis/api/transferencia";
-        
-        // Averiguo cual es el saldo actual de la cuenta origen.
-        
-        // Verifico si la cuenta de origen tiene el monto suficiente.
-        if (saldoDisponible >= valorTransferir){
-                        
-            // si tipo_transferencia == 1 -> es una transferencia. 
-            if (tipo_transferencia == "1"){
-                                               
+                        //si es interbancaria realizo el movimiento e informo
+                        Date fechaActual = new Date();
+                        if("0".equals(flagErrorCtaDestino)){
+                            str += " | es cuenta interbancaria";
+                            //realizo el movimiento
+                            //constructor: public Movimiento(int idCuentaOrigen,int idCuentaDestino, Float importe, Date fechaHora, int idTipoMovimiento,int estado) 
+                            //nota estado movimiento en nuestra db 1:pendiente 2:finalizada
+                            Movimiento mov = new Movimiento(cuenta_origen,cuenta_destino,importeFinal,fechaActual,tipo_movimiento,2);
+                            ejbMovimientoFacade.create(mov);
+
+                            // envio el json con la transferencia al banco central.
+                            JSONObject transferencia = new JSONObject();
+                                transferencia.put("cuentaOrigen", cuenta_origen);
+                                transferencia.put("cuentaDestino", cuenta_destino);    
+                                transferencia.put("importe", importeFinal);
+                                transferencia.put("fechaInicio", fechaActual );
+                                transferencia.put("fechaFin","");
+                                transferencia.put("estado","COMPLETA");
+                            
+                            String respuestaTrans = this.enviarHttpRequest("http://lsi.no-ip.org:8282/esferopolis/api/transferencia","POST",transferencia);
+                            str += " | rta trans "+ respuestaTrans;
+
+                        }else{
+                            str += " | es a otro banco";
+                            //si la cta destino es de otro banco, solo registro en mi db como pendiente
+                            Movimiento mov = new Movimiento(cuenta_origen,cuenta_destino,importeFinal,fechaActual,tipo_movimiento,1);
+                            ejbMovimientoFacade.create(mov);
+
+                        }
+                    }
+                }
+                return str;
+            }catch(Exception e){
+                return e.getMessage();
             }
-            
-            // si tipo_transferencia == 2 -> es una venta (hay impuesto). 
-            if (tipo_transferencia == "2"){
-                
-            }    
-            
-            // envio el json con la transferencia al banco central.
-            JSONObject transferencia = new JSONObject();
-                transferencia.put("cuentaOrigen", idCuenta);
-                transferencia.put("cuentaDestino", cuenta_destino);    
-                transferencia.put("importe", valorTransferir);
-                transferencia.put("fechaInicio", fechaActual );
-                transferencia.put("fechaFin","");
-                transferencia.put("estado","");
-            
+        
+        }else{
+            return String.valueOf(monto);
         }
-        return null;
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-
-	
-
-
-}
+    }
 }
 

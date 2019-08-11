@@ -6,8 +6,10 @@
 package utn.frd.grupo_tbt.rest.services;
 
 
+import java.sql.SQLException;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.StoredProcedureQuery;
 import javax.ws.rs.Consumes;
@@ -59,28 +61,39 @@ public class CuentaRest {
     @Path("/{idCuenta}")
     @Produces({MediaType.TEXT_PLAIN})
     public String infoCuenta(@PathParam("idCuenta") int id) throws JSONException{
+        
         try{
             StoredProcedureQuery storedProcedure = ejbCuentaFacade.getEntityManager().createNamedStoredProcedureQuery("Cuenta.saldoCuenta");
             storedProcedure.setParameter("idCuenta", id);
+            try{
+                storedProcedure.execute();
+                Double saldo = (Double) storedProcedure.getOutputParameterValue("p_saldo");
+                Cuenta unaCuenta = (Cuenta)storedProcedure.getSingleResult();
 
-            storedProcedure.execute();
-            Double saldo = (Double) storedProcedure.getOutputParameterValue("p_saldo");
-            Cuenta unaCuenta = (Cuenta)storedProcedure.getSingleResult();
-            
-            JSONObject jsonCuenta = new JSONObject()
-                    .put("idCuenta", unaCuenta.getIdCuenta())
-                    .put("idCliente", unaCuenta.getIdCliente())
-                    .put("saldo", saldo);
-            return jsonCuenta.toString();
+                JSONObject jsonCuenta = new JSONObject()
+                        .put("flag_error", "0")
+                        .put("idCuenta", unaCuenta.getIdCuenta())
+                        .put("idCliente", unaCuenta.getIdCliente())
+                        .put("saldo", saldo);
+                return jsonCuenta.toString();
 
+            }catch(NoResultException e){
+                JSONObject jsonError = new JSONObject()
+                        .put("flag_error", "1")
+                        .put("info", e.getMessage());
+                return jsonError.toString();
+            }
         }catch(JSONException e){
-            return e.getMessage();
+            JSONObject jsonError = new JSONObject()
+                    .put("flag_error", "1")
+                    .put("info", e.getMessage());
+            return jsonError.toString();
         }
     }
     @GET
     @Path("/listaCuentas/{idCliente}")
     @Produces({MediaType.TEXT_PLAIN})
-    public String listaCuentas(@PathParam("idCliente") int idCliente) throws JSONException{
+    public String listaCuentas(@PathParam("idCliente") int idCliente) throws JSONException, SQLException{
         try{
             Query query = ejbCuentaFacade.getEntityManager().createQuery("SELECT c from Cuenta c WHERE c.idCliente = "+idCliente);
             JSONObject jsonArray = new JSONObject();

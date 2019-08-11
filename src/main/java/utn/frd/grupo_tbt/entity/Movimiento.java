@@ -71,10 +71,10 @@ public class Movimiento implements Serializable {
     public Movimiento() {
     }
 
-    public Movimiento(Integer idMovimiento) {
+
+    public Movimiento(int idMovimiento) {
         this.idMovimiento = idMovimiento;
     }
-
     public Movimiento(int idCuentaOrigen,int idCuentaDestino, Float importe, Date fechaHora, int idTipoMovimiento,int estado) {
         this.idCuentaOrigen = idCuentaOrigen;
         this.idCuentaDestino = idCuentaDestino;
