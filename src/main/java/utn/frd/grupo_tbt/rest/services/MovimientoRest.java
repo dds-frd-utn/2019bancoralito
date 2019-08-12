@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
@@ -230,7 +231,7 @@ public class MovimientoRest {
     @POST
     @Path("/realizar")
     @Produces({MediaType.TEXT_PLAIN})
-    @Consumes({MediaType.TEXT_PLAIN})
+    @Consumes({MediaType.APPLICATION_JSON})
     public String registrarMovimiento(String peticionInicial) throws JSONException{
         JSONObject jsonPeticion = new JSONObject(peticionInicial);
         int cuenta_origen = jsonPeticion.getInt("cuenta_origen");
@@ -241,14 +242,14 @@ public class MovimientoRest {
         float porcImpuesto = 0;
         float valorImpuesto = 0;
         String str = "";
+        
+        JSONObject jsonDevolver = new JSONObject();
         if(monto > 0){
             try{
-                str += "valor > 0";
                 if(tipo_movimiento == 2 || tipo_movimiento == 1){
-                    str += " | mov 2 o 1";
                     //Si es compra-venta, consulto el valor del impuesto
                     if(tipo_movimiento == 2){
-                        str += " | mov es 2";
+                        
                         String respuestaImpuesto = this.enviarHttpRequest("http://lsi.no-ip.org:8282/esferopolis/api/impuesto","GET",new JSONObject());
                         porcImpuesto = Float.parseFloat((new JSONObject(respuestaImpuesto)).getString("porcentaje"));
                         valorImpuesto = monto * porcImpuesto / 100;
@@ -256,53 +257,63 @@ public class MovimientoRest {
                     // Averiguo cual es el saldo actual de la cuenta origen.
                     String respuesta = this.enviarHttpRequest("http://localhost:8080/tp2019/rest/cuenta/"+cuenta_origen,"GET",new JSONObject());
                     float saldoDisponible = Float.parseFloat((new JSONObject(respuesta)).getString("saldo"));
-                    str += "| saldo " +(new JSONObject(respuesta)).getString("saldo");
+                    
                     float importeFinal = monto + valorImpuesto;
+                    int importeFinalInt = (int)importeFinal;
                     if (saldoDisponible >= importeFinal){
-                        str += " | entro if saldo disponible";
                         //Consulto si la cuenta destino pertenece a mi banco
                         String cuentaDestino = this.enviarHttpRequest("http://localhost:8080/tp2019/rest/cuenta/"+cuenta_destino,"GET",new JSONObject());
                         String flagErrorCtaDestino = new JSONObject(cuentaDestino).getString("flag_error");
                         //0:la encontró, 1:no la encontró (es de otro banco)
 
                         //si es interbancaria realizo el movimiento e informo
-                        Date fechaActual = new Date();
+                        Date date = new Date();
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");  
+                        String fechaActual= formatter.format(date);  
                         if("0".equals(flagErrorCtaDestino)){
-                            str += " | es cuenta interbancaria";
                             //realizo el movimiento
                             //constructor: public Movimiento(int idCuentaOrigen,int idCuentaDestino, Float importe, Date fechaHora, int idTipoMovimiento,int estado) 
                             //nota estado movimiento en nuestra db 1:pendiente 2:finalizada
-                            Movimiento mov = new Movimiento(cuenta_origen,cuenta_destino,importeFinal,fechaActual,tipo_movimiento,2);
+                            Movimiento mov = new Movimiento(cuenta_origen,cuenta_destino,importeFinal,date,tipo_movimiento,2);
                             ejbMovimientoFacade.create(mov);
 
                             // envio el json con la transferencia al banco central.
                             JSONObject transferencia = new JSONObject();
                                 transferencia.put("cuentaOrigen", cuenta_origen);
                                 transferencia.put("cuentaDestino", cuenta_destino);    
-                                transferencia.put("importe", importeFinal);
-                                transferencia.put("fechaInicio", fechaActual );
-                                transferencia.put("fechaFin","");
-                                transferencia.put("estado","COMPLETA");
+                                transferencia.put("importe", importeFinalInt);
+                                transferencia.put("fechaInicio",fechaActual);
+                                transferencia.put("fechaFin",fechaActual);
+                                transferencia.put("estado",0);
                             String respuestaTrans = this.enviarHttpRequest("http://lsi.no-ip.org:8282/esferopolis/api/transferencia","POST",transferencia);
-                            str += " | rta trans "+ respuestaTrans;
-
+                            if(respuestaTrans.length() != 0){
+                                jsonDevolver.put("flag_error", "1");
+                                jsonDevolver.put("error", "Ocurrió un error al informar la transferencia. " +transferencia.toString()+ respuestaTrans);
+                            }else{
+                                jsonDevolver.put("flag_error", "0");
+                                jsonDevolver.put("mensaje", "Ok");
+                            }
                         }else{
-                            str += " | es a otro banco";
                             //si la cta destino es de otro banco, solo registro en mi db como pendiente
-                            Movimiento mov = new Movimiento(cuenta_origen,cuenta_destino,importeFinal,fechaActual,tipo_movimiento,1);
+                            Movimiento mov = new Movimiento(cuenta_origen,cuenta_destino,importeFinal,date,tipo_movimiento,1);
                             ejbMovimientoFacade.create(mov);
-
                         }
+                    }else{
+                        jsonDevolver.put("flag_error", "1");
+                        jsonDevolver.put("error", "No tienen saldo suficiente para realizar la transacción.");
                     }
                 }
-                return str;
+                return jsonDevolver.toString();
             }catch(Exception e){
-                return e.getMessage();
+                jsonDevolver.put("flag_error", "1");
+                jsonDevolver.put("error", e.getMessage());
+                return jsonDevolver.toString();
             }
         
         }else{
-            return String.valueOf(monto);
-        }
+            jsonDevolver.put("flag_error", "1");
+            jsonDevolver.put("error", "El importe no puede ser negativo");
+            return jsonDevolver.toString();        }
     }
 }
 
