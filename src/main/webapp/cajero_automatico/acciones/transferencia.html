@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>CAJERO AUTOMATICO BANCO RALITO</title>
+        <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+        <meta charset="UTF-8">
+        <link href="../css/all.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="../css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link href="../css/login.css" rel="stylesheet" id="bootstrap-css">
+        <script src="../jquery/jquery.js"></script>
+
+        
+        <style> 
+            header{
+                height: 4em;
+            }
+            label{
+                opacity: initial;
+                color: black;
+            }
+            #selectCuenta, .inputEditados{
+                width: 85%;
+                display:inline-block;
+                margin: 15px 32px;
+            }
+            label{
+                margin: 0% 10%;
+                display:  flex;
+            }
+            .error{
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header-cajero">
+            <div class="row">
+                <h4>Realizar una transferencia</h4>
+            </div>
+            <div class="row">
+                <h4 id="titleUsuario">[Información adicional]</h4>
+            </div>
+        </div>
+        <br>
+        <div class="container">
+            <div class="wrapper">
+                <div id="formContent">
+                  <!-- Tabs Titles -->
+
+                        <!-- Icon -->
+                      <div class="fadeIn first">
+                        <!--<img src="" id="icon" alt="User Icon" />-->
+                        <h5>Realizar transferencia</h5>
+                      </div>
+
+                      <!-- Login Form -->
+                      <form>
+                            <label>Seleccione su cuenta</label>
+                            <select name="idCuenta" id="selectCuenta" class="form-control">
+                                <option value="-1" id="optionModelo"></option>
+                            </select>
+                            <label id="errorCuentaOrigen" class="error"></label>
+                            
+                            <input type="text" name="idCuentaDestino" id="idCuentaDestino" value="">
+                            <label id="errorCuentaDestino" class="error"></label>
+
+                            <input type="number" step="1" value="" id="monto" class="fadeIn second form-control inputEditados" name="monto" placeholder="Monto">
+                            <label id="errorMonto" class="error"></label>
+
+                            <input type="submit" id="btnRealizar" class="fadeIn fourth" value="Realizar movimiento">
+                      </form>
+                </div>
+            </div>
+        </div>
+    <script src="../js/printNombre.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.ajax({
+                url:"http://localhost:8080/tp2019/VerSession",
+                type:"get",
+                async:"false",
+                dataType:"json",
+                success:function(myJson){
+                    let idCliente = myJson.idCliente;
+                    $.ajax({
+                        url:"http://localhost:8080/tp2019/rest/cuenta/listaCuentas/"+idCliente,
+                        type:"get",
+                        dataType:"json",
+                        success:function(jsonCuentas){
+                            $.each(jsonCuentas, function(key, val) {
+                                let row = $("#optionModelo").clone();
+                                row.html("Cuenta "+val.idCuenta+" : saldo $"+val.saldo);
+                                row.attr("value",val.idCuenta);
+                                row.attr("id","");
+                                $("#selectCuenta").append(row);
+                            });
+                        }
+                    });
+                },
+                error:function(error){
+                    alert("Se produjo un error");
+                    console.log(error);
+                }
+            });
+            
+        });
+        $("#btnRealizar").click(function(){
+            var idTipoMovimiento = 2;
+            var idCuentaOrigen = $("#idCuentaOrigen").val();
+            var idCuentaDestino = $("#idCuentaDestino").val();
+            var monto = $("#monto").val();
+            let flag_enviar = true;
+            //validaciones
+            if(idCuentaOrigen == '-1'){
+                $("#errorCuentaOrigen").html("Debe seleccionar la cuenta de origen");
+                flag_enviar = false;
+            }
+            if(idCuentaDestino == ''){
+                $("#errorCuentaDestino").html("Debe seleccionar la cuenta destino");
+                flag_enviar = false;
+            }
+            if(monto == ''){
+                $("#errorMonto").html("Debe seleccionar el monto");
+                flag_enviar = false;
+            }
+            //si ninguna validación falló
+            //realizo el ajax para registrar la transferencia
+            if(flag_enviar){
+                $.ajax({
+                    url:"http://localhost:8080/tp2019/movimiento/realizar",
+                    type:"post",
+                    async:"false",
+                    dataType:"json",
+                    success:function(myJson){
+                        
+                        $.ajax({
+                            url:"http://localhost:8080/tp2019/rest/cuenta/listaCuentas/"+idCliente,
+                            type:"get",
+                            dataType:"json",
+                            success:function(jsonCuentas){
+                                $.each(jsonCuentas, function(key, val) {
+                                    let row = $("#optionModelo").clone();
+                                    row.html("Cuenta "+val.idCuenta+" : saldo $"+val.saldo);
+                                    row.attr("value",val.idCuenta);
+                                    row.attr("id","");
+                                    $("#selectCuenta").append(row);
+                                });
+                            }
+                        });
+                    },
+                    error:function(error){
+                        alert("Se produjo un error");
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    </script>
+    </body>
+</html>
