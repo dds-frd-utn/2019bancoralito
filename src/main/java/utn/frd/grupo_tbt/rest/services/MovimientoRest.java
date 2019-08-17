@@ -132,11 +132,6 @@ public class MovimientoRest {
         }
     }
 
-    /**
-     *
-     * @return
-     * @throws JSONException
-     */
     @Path("/transferenciaspendientes")
     @GET
     @Produces({MediaType.TEXT_PLAIN})
@@ -144,9 +139,9 @@ public class MovimientoRest {
         
         String resultado = this.findByEstado('1');
         
-        //Identificar cada elemento de la lista y actualizarlo en la DB, preferentemente despues de enviarlos
         //Acomodar los campos del JSON que se envía a BC
-                
+        //Identificar cada elemento de la lista y actualizarlo en la DB, preferentemente despues de enviarlos
+        
         //JSONArray jsonArray = new JSONArray(resultado);
         //JSONArray jsonResultado = new JSONArray();
 
