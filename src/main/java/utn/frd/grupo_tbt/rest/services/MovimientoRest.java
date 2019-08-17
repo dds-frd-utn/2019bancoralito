@@ -191,22 +191,15 @@ public class MovimientoRest {
         return resultado;
     }
     
-    /**
-     *
-     * @param estado
-     * @return
-     * @throws JSONException
-     */
     @Path("/estado/{estado}")
     @GET
-    @Produces({MediaType.TEXT_PLAIN})
-    public String findByEstado(@PathParam("estado") int  estado) throws JSONException {
-    //public String findByEstado(int  estado) throws JSONException {
+    @Produces({MediaType.APPLICATION_JSON})
+    public String findByEstado(@PathParam("estado") int estado) throws JSONException{
         try{
-            Query query = ejbMovimientoFacade.getEntityManager().createQuery("SELECT c FROM Movimiento c WHERE c.estado = "+estado);
+            Query query = ejbMovimientoFacade.getEntityManager().createQuery("SELECT c from Movimiento c WHERE c.estado = "+estado +" order by c.fechaHora DESC");
             List<Movimiento> listMov = query.getResultList();
             
-            JSONArray jsonArray = new JSONArray();
+            JSONObject jsonArray = new JSONObject();
             JSONObject jsonElement;
             String movString;
             
@@ -219,10 +212,11 @@ public class MovimientoRest {
                         .put("fechaHora", unMov.getFechaHora())
                         .put("estado", unMov.getEstado())
                         ;
-                jsonArray.put(jsonElement);
+                jsonArray.put(String.valueOf(unMov.getIdMovimiento()),jsonElement);
             }
             
             return jsonArray.toString();
+
         }catch(JSONException e){
             return e.getMessage();
         }
