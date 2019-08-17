@@ -135,27 +135,28 @@ public class MovimientoRest {
     @Path("/transferenciaspendientes")
     @GET
     @Produces({MediaType.TEXT_PLAIN})
-    public String transferenciaspendientes() throws JSONException {
+    public JSONArray transferenciaspendientes() throws JSONException {
         
-        String resultado = this.findByEstado('1');
+        String resultado = this.findByEstado(1);
         
         //Acomodar los campos del JSON que se envía a BC
         //Identificar cada elemento de la lista y actualizarlo en la DB, preferentemente despues de enviarlos
         
-        //JSONArray jsonArray = new JSONArray(resultado);
-        //JSONArray jsonResultado = new JSONArray();
-
-/*        for (int i = 0; i < resultado.length(); i++) {
+        JSONArray jsonArray = new JSONArray(resultado);
+        JSONArray jsonResultado = new JSONArray();
+        
+        for (int i = 0; i < jsonArray.length(); i++) {
             
             //Toma cada movimiento pendiente de envio
-            JSONObject object = resultado.getJSONObject(i);
+            JSONObject object = jsonArray.getJSONObject(i);
             
-            //Preparo para persistir en DB
-            Integer idMovimiento = (Integer) object.get("idMovimiento");
+            //Preparo para enviar a BC
             Integer idCuentaOrigen = (Integer) object.get("idCuentaOrigen");
             Integer idCuentaDestino = (Integer) object.get("idCuentaDestino");
             Float Importe = (Float) object.get("importe");
-                    
+            
+            jsonResultado.put(object);
+        }        
           /*  Movimiento actualizoEstado;
             actualizoEstado = new Movimiento(
                     idMovimiento,
@@ -183,8 +184,8 @@ public class MovimientoRest {
             jsonResultado.put(jsonElement);
         }*/
         
-        return resultado;
-    }
+        return jsonResultado;
+        }
     
     @Path("/estado/{estado}")
     @GET
