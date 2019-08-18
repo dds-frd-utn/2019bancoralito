@@ -61,13 +61,15 @@ and open the template in the editor.
 
                       <!-- Login Form -->
                       <form>
-                            <label>Seleccione su cuenta</label>
-                            <select name="idCuenta" id="selectCuenta" class="form-control">
+                            <div class="fadeIn first">
+                                <label>Seleccione su cuenta</label>
+                            <select  name="idCuenta" id="selectCuenta" class="form-control">
                                 <option value="-1" id="optionModelo"></option>
                             </select>
+                            </div>
                             <label id="errorCuentaOrigen" class="error"></label>
                             
-                            <input type="text" name="idCuentaDestino" id="idCuentaDestino" value="">
+                            <input type="text" name="idCuentaDestino" id="idCuentaDestino" value="" placeholder="Cuenta destino" class="fadeIn second form-control inputEditados">
                             <label id="errorCuentaDestino" class="error"></label>
 
                             <input type="number" step="1" value="" id="monto" class="fadeIn second form-control inputEditados" name="monto" placeholder="Monto">
