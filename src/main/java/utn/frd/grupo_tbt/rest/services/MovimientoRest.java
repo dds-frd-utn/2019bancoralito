@@ -135,13 +135,41 @@ public class MovimientoRest {
     @Path("/transferenciaspendientes")
     @GET
     @Produces({MediaType.TEXT_PLAIN})
-    public JSONArray transferenciaspendientes() throws JSONException {
-        
-        String resultado = this.findByEstado(1);
+    public String transferenciaspendientes() throws JSONException {
         
         //Acomodar los campos del JSON que se envía a BC
         //Identificar cada elemento de la lista y actualizarlo en la DB, preferentemente despues de enviarlos
         
+        try{
+            Query query = ejbMovimientoFacade.getEntityManager().createQuery("SELECT c from Movimiento c WHERE c.estado = 1 order by c.fechaHora DESC");
+            List<Movimiento> listMov = query.getResultList();
+            
+            JSONObject jsonArray = new JSONObject();
+            JSONObject jsonElement;
+            String movString;
+            
+            for(Movimiento unMov : listMov){
+                jsonElement = new JSONObject()
+                        .put("idCuentaOrigen", unMov.getIdCuentaOrigen())
+                        .put("idCuentaDestino", unMov.getIdCuentaDestino())
+                        .put("importe", unMov.getImporte())
+                        .put("fechaInicio", unMov.getFechaHora())
+                        .put("fechaFin", "")
+                        .put("estado", "PENDIENTE")
+                        ;
+                jsonArray.put(String.valueOf(unMov.getIdMovimiento()),jsonElement);
+            }
+            
+            Query queryActualizacion = ejbMovimientoFacade.getEntityManager().createQuery("UPDATE Movimiento SET estado = 2 WHERE estado = 1");
+            int executeUpdate = queryActualizacion.executeUpdate();
+            
+            return jsonArray.toString();
+
+        }catch(JSONException e){
+            return e.getMessage();
+        }        
+
+        /*
         JSONArray jsonArray = new JSONArray(resultado);
         JSONArray jsonResultado = new JSONArray();
         
@@ -184,7 +212,7 @@ public class MovimientoRest {
             jsonResultado.put(jsonElement);
         }*/
         
-        return jsonResultado;
+        //return jsonResultado;
         }
     
     @Path("/estado/{estado}")
