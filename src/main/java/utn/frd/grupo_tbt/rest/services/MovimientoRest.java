@@ -162,58 +162,13 @@ public class MovimientoRest {
             
             Query queryActualizacion = ejbMovimientoFacade.getEntityManager().createQuery("UPDATE Movimiento SET estado = 2 WHERE estado = 1");
             int executeUpdate = queryActualizacion.executeUpdate();
-            
+           
             return jsonArray.toString();
 
-        }catch(JSONException e){
-            return e.getMessage();
-        }        
-
-        /*
-        JSONArray jsonArray = new JSONArray(resultado);
-        JSONArray jsonResultado = new JSONArray();
-        
-        for (int i = 0; i < jsonArray.length(); i++) {
-            
-            //Toma cada movimiento pendiente de envio
-            JSONObject object = jsonArray.getJSONObject(i);
-            
-            //Preparo para enviar a BC
-            Integer idCuentaOrigen = (Integer) object.get("idCuentaOrigen");
-            Integer idCuentaDestino = (Integer) object.get("idCuentaDestino");
-            Float Importe = (Float) object.get("importe");
-            
-            jsonResultado.put(object);
-        }        
-          /*  Movimiento actualizoEstado;
-            actualizoEstado = new Movimiento(
-                    idMovimiento,
-                    idCuentaOrigen,
-                    idCuentaDestino,
-                    Importe,
-                    object.get("fechaHora"),
-                    2
-            );
-            
-            //Persisto en DB
-            ejbMovimientoFacade.edit(actualizoEstado); 
-            
-            //Preparo para enviar respuesta a BC
-            
-                        JSONObject jsonElement = new JSONObject()
-                        .put("cuentaOrigen", object.get("idCuentaOrigen") )
-                        .put("cuentaDestino", object.get("idCuentaDestino"))
-                        .put("importe", object.get("importe"))
-                        .put("fechaInicio", object.get("fechaHora"))
-                        .put("fechaFin", "")
-                        .put("estado", "PENDIENTE")
-            ;
-                        
-            jsonResultado.put(jsonElement);
-        }*/
-        
-        //return jsonResultado;
+            }catch(JSONException e){
+                return e.getMessage();
         }
+    }
     
     @Path("/estado/{estado}")
     @GET
