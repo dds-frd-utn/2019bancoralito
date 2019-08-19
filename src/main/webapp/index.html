@@ -19,6 +19,16 @@
 
   <!-- Plugin CSS -->
   <link href="vendor/magnific-popup/magnific-popup.css" rel="stylesheet">
+  
+  <!-- Cosas de bootstrap que estoy intentando hacer andar -->
+  <link href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.css" rel="stylesheet">
+  <link href="https://getbootstrap.com/docs/4.3/assets/css/docs.min.css" rel="stylesheet">
+  <script src="https://getbootstrap.com/docs/4.3/assets/js/docs.min.js"></script>
+  
+  
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 
   <!-- Theme CSS - Includes Bootstrap -->
   <link href="css/creative.css" rel="stylesheet">
@@ -130,9 +140,59 @@
       </div>
     </div>
   </section>
+  
+  <h2 class="text-center mt-0">Documentacion</h2>  
+  
+  <div class="row">
+  <div class="col-4">
+    <div class="list-group" id="list-tab" role="tablist">
+      <a class="list-group-item list-group-item-action active" id="list-crearcliente-list" data-toggle="list" href="#list-crearcliente" role="tab" aria-controls="home">Crear cliente</a>
+      <a class="list-group-item list-group-item-action" id="list-info-list" data-toggle="list" href="#list-info" role="tab" aria-controls="info">Informacion de cuenta</a>
+      <a class="list-group-item list-group-item-action" id="list-consultar-list" data-toggle="list" href="#list-consultar" role="tab" aria-controls="consultar">Consultar ultimos movimientos</a>
+      <a class="list-group-item list-group-item-action" id="list-cuentas-list" data-toggle="list" href="#list-cuentas" role="tab" aria-controls="cuentas">Cuentas de un cliente</a>
+      <a class="list-group-item list-group-item-action" id="list-transferencia-list" data-toggle="list" href="#list-transferencia" role="tab" aria-controls="transferencia">Realizar una transferencia</a>
+      <a class="list-group-item list-group-item-action" id="list-tpendiente-list" data-toggle="list" href="#list-tpendiente" role="tab" aria-controls="tpendiente">Transferencias pendientes</a>
+    </div>
+    </div>
+    </div>
+  </div>
+  <div class="col-8">
+    <div class="tab-content" id="nav-tabContent">
+      <div class="tab-pane fade show active" id="list-crearcliente" role="tabpanel" aria-labelledby="list-crearcliente-list">Para poder dar de alta un cliente se invoca método POST altaCliente desde la URL http://localhost:8080/tp2019/rest/cliente. Debe pasarle como parámetro el du del cliente.</div>
+      <div class="tab-pane fade" id="list-info" role="tabpanel" aria-labelledby="list-info-list">Diríjase con método GET al URL http://localhost:8080/tp2019/rest/cuenta/{du} indicando du.
+</div>
+      <div class="tab-pane fade" id="list-consultar" role="tabpanel" aria-labelledby="list-consultar-list">Para consultar los últimos 10 movimientos de una cuenta se debe consultar con un método GET al URL http://localhost:8080/tp2019/{idcuenta}/{cantidadMov}. El sistema devolverá la siguiente información por medio de un JSON:
+
+{ “cuentaOrigen”,
+	“cuentaDestino”,
+	“tipo”,
+	“Importe”,
+	“Fecha”
+}
+</div>
+      <div class="tab-pane fade" id="list-cuentas" role="tabpanel" aria-labelledby="list-cuentas-list">Para conocer todas las cuentas que tiene un cliente utilice el método GET http://localhost:8080/tp2019/rest/cuenta/listaCuentas/{du} indicando el du del cliente.
+</div>
+      <div class="tab-pane fade" id="list-transferencia" role="tabpanel" aria-labelledby="list-transferencia-list">Para poder realizar una transferencia se debe enviar por POST un JSON a http://localhost:8080/tp2019/rest/movimiento. El JSON debe ser del formato:
+{
+  “idTipoMovimiento”: 2=Transferencia | 3 = compra-venta (automático),
+	  "cuentaOrigen": "ID DE LA CUENTA DEL QUE TRANSFIERE", 
+  "cuentaDestino": "ID DE LA CUENTA DESTINO",
+  “importe”: IMPORTE A TRASNFERIR,
+  "fechaInicio": "FECHA INICIO TRANSFERENCIA", (AUTOMÁTICO)
+}
+</div>
+      <div class="tab-pane fade" id="list-tpendiente" role="tabpanel" aria-labelledby="list-tpendiente-list">Para que el banco Central pueda consultar las transferencias pendientes de envío a otros bancos invoca el método GET en http://localhost:8080/tp2019/rest/movimiento/transferenciaspendientes y recibirá listado de las transferencias que es necesario distribuir en los correspondientes bancos. Además las actualizará en la base de datos como enviadas.
+</div>
+    </div>
+  </div>
+
+  </div>
+</div>
+  
+
 
   <!-- Portfolio Section -->
-  <section id="portfolio">
+  <!-- <section id="portfolio">
     <div class="container-fluid p-0">
       <div class="row no-gutters">
         <div class="col-lg-4 col-sm-6">
@@ -174,6 +234,7 @@
             </div>
           </a>
         </div>
+ --> 
 <!--
         <div class="col-lg-4 col-sm-6">
           <a class="portfolio-box" href="">
