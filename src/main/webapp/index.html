@@ -19,17 +19,8 @@
 
   <!-- Plugin CSS -->
   <link href="vendor/magnific-popup/magnific-popup.css" rel="stylesheet">
-  
-  <!-- Cosas de bootstrap que estoy intentando hacer andar -->
-  <link href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.css" rel="stylesheet">
-  <link href="https://getbootstrap.com/docs/4.3/assets/css/docs.min.css" rel="stylesheet">
-  <script src="https://getbootstrap.com/docs/4.3/assets/js/docs.min.js"></script>
-  <script src="/js/bootstrap.js"></script>
-  
-  
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+
+  <link href="cajero_automatico/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Theme CSS - Includes Bootstrap -->
   <link href="css/creative.css" rel="stylesheet">
@@ -55,7 +46,7 @@
             <a class="nav-link js-scroll-trigger" href="#services">Servicios</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#portfolio">Documentación</a>
+            <a class="nav-link js-scroll-trigger" href="#documentacion">Documentación</a>
           </li>
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="#download">Descargas</a>
@@ -90,20 +81,6 @@
     </div>
   </header>
 
-  <!-- About Section -->
-<!--  <section class="page-section bg-primary" id="about">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-8 text-center">
-          <h2 class="text-white mt-0">We've got what you need!</h2>
-          <hr class="divider light my-4">
-          <p class="text-white-50 mb-4">Start Bootstrap has everything you need to get your new website up and running in no time! Choose one of our open source, free to download, and easy to use themes! No strings attached!</p>
-          <a class="btn btn-light btn-xl js-scroll-trigger" href="#services">Get Started!</a>
-        </div>
-      </div>
-    </div>
-  </section>-->
-
   <!-- Services Section -->
   <section class="page-section" id="services">
     <div class="container">
@@ -131,168 +108,83 @@
             <p class="text-muted mb-0">Podés enviar y recibir dinero con cualquier persona.</p>
           </div>
         </div>
-<!--        <div class="col-lg-3 col-md-6 text-center">
-          <div class="mt-5">
-            <i class="fas fa-4x fa-heart text-primary mb-4"></i>
-            <h3 class="h4 mb-2">Made with Love</h3>
-            <p class="text-muted mb-0">Is it really open source if it's not made with love?</p>
-          </div>
-        </div>-->
+
       </div>
     </div>
   </section>
+    <section class="page-section" id="documentacion">
+
+  <h2 class="text-center mt-0">Documentación</h2>  
   
-  <h2 class="text-center mt-0">Documentacion</h2>  
-  
-  <div class="row">
-  <div class="col-4">
-    <div class="list-group" id="list-tab" role="tablist">
-      <a class="list-group-item list-group-item-action active" id="list-crearcliente-list" data-toggle="list" href="#list-crearcliente" role="tab" aria-controls="home">Crear cliente</a>
-      <a class="list-group-item list-group-item-action" id="list-info-list" data-toggle="list" href="#list-info" role="tab" aria-controls="info">Informacion de cuenta</a>
-      <a class="list-group-item list-group-item-action" id="list-consultar-list" data-toggle="list" href="#list-consultar" role="tab" aria-controls="consultar">Consultar ultimos movimientos</a>
-      <a class="list-group-item list-group-item-action" id="list-cuentas-list" data-toggle="list" href="#list-cuentas" role="tab" aria-controls="cuentas">Cuentas de un cliente</a>
-      <a class="list-group-item list-group-item-action" id="list-transferencia-list" data-toggle="list" href="#list-transferencia" role="tab" aria-controls="transferencia">Realizar una transferencia</a>
-      <a class="list-group-item list-group-item-action" id="list-tpendiente-list" data-toggle="list" href="#list-tpendiente" role="tab" aria-controls="tpendiente">Transferencias pendientes</a>
-    </div>
-    </div>
-    </div>
-  </div>
-  <div class="col-8">
+   <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="list-group" id="list-tab" role="tablist">
+          <a class="list-group-item list-group-item-action active" id="list-crearcliente-list" data-toggle="list" href="#list-crearcliente" role="tab" aria-controls="home">Crear cliente</a>
+          <a class="list-group-item list-group-item-action" id="list-info-list" data-toggle="list" href="#list-info" role="tab" aria-controls="info">Informacion de cuenta</a>
+          <a class="list-group-item list-group-item-action" id="list-consultar-list" data-toggle="list" href="#list-consultar" role="tab" aria-controls="consultar">Consultar ultimos movimientos</a>
+          <a class="list-group-item list-group-item-action" id="list-cuentas-list" data-toggle="list" href="#list-cuentas" role="tab" aria-controls="cuentas">Cuentas de un cliente</a>
+          <a class="list-group-item list-group-item-action" id="list-transferencia-list" data-toggle="list" href="#list-transferencia" role="tab" aria-controls="transferencia">Realizar una transferencia</a>
+          <a class="list-group-item list-group-item-action" id="list-tpendiente-list" data-toggle="list" href="#list-tpendiente" role="tab" aria-controls="tpendiente">Transferencias pendientes</a>
+        </div>
+      </div>
+    <div class="col-lg-8">
     <div class="tab-content" id="nav-tabContent">
-      <div class="tab-pane fade show active" id="list-crearcliente" role="tabpanel" aria-labelledby="list-crearcliente-list">Para poder dar de alta un cliente se invoca método POST altaCliente desde la URL http://localhost:8080/tp2019/rest/cliente. Debe pasarle como parámetro el du del cliente.</div>
-      <div class="tab-pane fade" id="list-info" role="tabpanel" aria-labelledby="list-info-list">Diríjase con método GET al URL http://localhost:8080/tp2019/rest/cuenta/{du} indicando du.
-</div>
+      <div class="tab-pane fade show active" id="list-crearcliente" role="tabpanel" aria-labelledby="list-crearcliente-list">
+        <p>
+            Para poder solicitar el alta de un cliente se debe enviar el siguiente request a nuestra API:
+        </p>
+        <dl>
+            <dt>Método:</dt>
+            <dd>POST</dd>
+
+            <dt>URL:</dt>
+            <dd>URL: http://...urlbancoralito.../rest/cliente</dd>
+
+            <dt>Parámetro:</dt>
+            <dd>{<br>
+                "du":[entero],<br>
+                "saldo":[float],<br>
+                "usuario":"[string]",<br>
+                "contrasenia":"[string]",<br>
+                "email":"[string]"<br>
+                }
+            </dd>
+        </dl>
+        <p>
+            <i>La misma también se puede realizar por interfaz de usuario desde el cajero electrónico del banco.</i>
+        </p>
+    </div>
+    <div class="tab-pane fade" id="list-info" role="tabpanel" aria-labelledby="list-info-list">Diríjase con método GET al URL http://localhost:8080/tp2019/rest/cuenta/{du} indicando du.
+        </div>
       <div class="tab-pane fade" id="list-consultar" role="tabpanel" aria-labelledby="list-consultar-list">Para consultar los últimos 10 movimientos de una cuenta se debe consultar con un método GET al URL http://localhost:8080/tp2019/{idcuenta}/{cantidadMov}. El sistema devolverá la siguiente información por medio de un JSON:
 
-{ “cuentaOrigen”,
-	“cuentaDestino”,
-	“tipo”,
-	“Importe”,
-	“Fecha”
-}
-</div>
-      <div class="tab-pane fade" id="list-cuentas" role="tabpanel" aria-labelledby="list-cuentas-list">Para conocer todas las cuentas que tiene un cliente utilice el método GET http://localhost:8080/tp2019/rest/cuenta/listaCuentas/{du} indicando el du del cliente.
-</div>
-      <div class="tab-pane fade" id="list-transferencia" role="tabpanel" aria-labelledby="list-transferencia-list">Para poder realizar una transferencia se debe enviar por POST un JSON a http://localhost:8080/tp2019/rest/movimiento. El JSON debe ser del formato:
-{
-  “idTipoMovimiento”: 2=Transferencia | 3 = compra-venta (automático),
-	  "cuentaOrigen": "ID DE LA CUENTA DEL QUE TRANSFIERE", 
-  "cuentaDestino": "ID DE LA CUENTA DESTINO",
-  “importe”: IMPORTE A TRASNFERIR,
-  "fechaInicio": "FECHA INICIO TRANSFERENCIA", (AUTOMÁTICO)
-}
-</div>
-      <div class="tab-pane fade" id="list-tpendiente" role="tabpanel" aria-labelledby="list-tpendiente-list">Para que el banco Central pueda consultar las transferencias pendientes de envío a otros bancos invoca el método GET en http://localhost:8080/tp2019/rest/movimiento/transferenciaspendientes y recibirá listado de las transferencias que es necesario distribuir en los correspondientes bancos. Además las actualizará en la base de datos como enviadas.
-</div>
+        { “cuentaOrigen”,
+                “cuentaDestino”,
+                “tipo”,
+                “Importe”,
+                “Fecha”
+        }
+        </div>
+              <div class="tab-pane fade" id="list-cuentas" role="tabpanel" aria-labelledby="list-cuentas-list">Para conocer todas las cuentas que tiene un cliente utilice el método GET http://localhost:8080/tp2019/rest/cuenta/listaCuentas/{du} indicando el du del cliente.
+        </div>
+              <div class="tab-pane fade" id="list-transferencia" role="tabpanel" aria-labelledby="list-transferencia-list">Para poder realizar una transferencia se debe enviar por POST un JSON a http://localhost:8080/tp2019/rest/movimiento. El JSON debe ser del formato:
+        {
+          “idTipoMovimiento”: 2=Transferencia | 3 = compra-venta (automático),
+                  "cuentaOrigen": "ID DE LA CUENTA DEL QUE TRANSFIERE", 
+          "cuentaDestino": "ID DE LA CUENTA DESTINO",
+          “importe”: IMPORTE A TRASNFERIR,
+          "fechaInicio": "FECHA INICIO TRANSFERENCIA", (AUTOMÁTICO)
+        }
+        </div>
+              <div class="tab-pane fade" id="list-tpendiente" role="tabpanel" aria-labelledby="list-tpendiente-list">Para que el banco Central pueda consultar las transferencias pendientes de envío a otros bancos invoca el método GET en http://localhost:8080/tp2019/rest/movimiento/transferenciaspendientes y recibirá listado de las transferencias que es necesario distribuir en los correspondientes bancos. Además las actualizará en la base de datos como enviadas.
+        </div>
     </div>
   </div>
-
-  </div>
-</div>
-  
-
-
-  <!-- Portfolio Section -->
-  <!-- <section id="portfolio">
-    <div class="container-fluid p-0">
-      <div class="row no-gutters">
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="img/portfolio/fullsize/DA/TP1-Procesos-ALTA.jpg">
-            <img class="img-fluid" src="img/portfolio/fullsize/DA/TP1-Procesos-ALTA.jpg" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Diagrama de actividades
-              </div>
-              <div class="project-name">
-                Alta
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="img/portfolio/fullsize/DA/TP1-Procesos-TRANSFERENCIA.jpg">
-            <img class="img-fluid" src="img/portfolio/fullsize/DA/TP1-Procesos-TRANSFERENCIA.jpg" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Diagrama de actividades
-              </div>
-              <div class="project-name">
-                TRANSFERENCIA
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="img/portfolio/fullsize/DC/TP1-Procesos-DC.jpg">
-            <img class="img-fluid" src="img/portfolio/fullsize/DC/TP1-Procesos-DC.jpg" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Modelo
-              </div>
-              <div class="project-name">
-                Diagrama de clases
-              </div>
-            </div>
-          </a>
-        </div>
- --> 
-<!--
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="">
-            <img class="img-fluid" src="" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                API
-              </div>
-              <div class="project-name">
-                Parámetros
-              </div>
-            </div>
-          </a>
-        </div>
-    
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="img/portfolio/fullsize/4.jpg">
-            <img class="img-fluid" src="img/portfolio/thumbnails/4.jpg" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="img/portfolio/fullsize/5.jpg">
-            <img class="img-fluid" src="img/portfolio/thumbnails/5.jpg" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="img/portfolio/fullsize/6.jpg">
-            <img class="img-fluid" src="img/portfolio/thumbnails/6.jpg" alt="">
-            <div class="portfolio-box-caption p-3">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </a>
-        </div>-->
-      </div>
     </div>
-  </section>
+    </div>
+    </section>
+
 
   <!-- Call to Action Section -->
   <section class="page-section bg-dark text-white" id="download">
