@@ -96,137 +96,17 @@ public class MovimientoRest {
     }
     @EJB
     private MovimientoFacade ejbMovimientoFacade;
-    
+        
     //obtener todas las entidades
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public List<Movimiento> findAll(){
         return ejbMovimientoFacade.findAll();
     }
-    
-    //actualizar entidades
-    @PUT
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Path("/{id}")
-    public void edit(@PathParam("id")int id){
-        //Para cuando pasemos un movimiento de pendiente a realizado
-    }
-  
-    @Path("/ultimosMovimientos/{idCuenta}/{cantidad}")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public String listaMovimientos(@PathParam("idCuenta") int idCuenta,@PathParam("cantidad") int cantidad) throws JSONException{
-        try{
-            Query query = ejbMovimientoFacade.getEntityManager().createQuery("SELECT c from Movimiento c WHERE c.idCuentaOrigen = "+idCuenta +" OR c.idCuentaDestino ="+idCuenta+" order by c.fechaHora DESC");
-            List<Movimiento> listMov = query.getResultList();
-            
-            JSONObject jsonArray = new JSONObject();
-            JSONObject jsonElement;
-            String movString;
-            
-            for(Movimiento unMov : listMov){
-                jsonElement = new JSONObject()
-                        .put("idMovimiento", unMov.getIdMovimiento())
-                        .put("idCuentaOrigen", unMov.getIdCuentaOrigen())
-                        .put("idCuentaDestino", unMov.getIdCuentaDestino())
-                        .put("importe", unMov.getImporte())
-                        .put("fechaHora", unMov.getFechaHora())
-                        .put("estado", unMov.getEstado())
-                        ;
-                jsonArray.put(String.valueOf(unMov.getIdMovimiento()),jsonElement);
-            }
-            
-            return jsonArray.toString();
-
-        }catch(JSONException e){
-            return e.getMessage();
-        }
-    }
-    
-    @Inject
-    UserTransaction ut;
-    @Path("/transferenciaspendientes")
-    @GET
-    @Produces({MediaType.TEXT_PLAIN})
-    public String transferenciaspendientes() throws JSONException, NotSupportedException, SystemException, RollbackException, IllegalStateException, HeuristicMixedException, HeuristicRollbackException {
-        
-        //Acomodar los campos del JSON que se envía a BC
-        //Identificar cada elemento de la lista y actualizarlo en la DB, preferentemente despues de enviarlos
-        
-        try{
-            Query query = ejbMovimientoFacade.getEntityManager().createQuery("SELECT c from Movimiento c WHERE c.estado = 1 order by c.fechaHora DESC");
-            List<Movimiento> listMov = query.getResultList();
-            
-            JSONObject jsonArray = new JSONObject();
-            JSONObject jsonElement;
-            String movString;
-            
-            for(Movimiento unMov : listMov){
-                jsonElement = new JSONObject()
-                        .put("idCuentaOrigen", unMov.getIdCuentaOrigen())
-                        .put("idCuentaDestino", unMov.getIdCuentaDestino())
-                        .put("importe", unMov.getImporte())
-                        .put("fechaInicio", unMov.getFechaHora())
-                        .put("fechaFin", "")
-                        .put("estado", "PENDIENTE")
-                        ;
-                jsonArray.put(String.valueOf(unMov.getIdMovimiento()),jsonElement);
-            }
-            
-            //Esto no anda
-            
-            ut.begin();
-            
-            Query queryActualizacion = ejbMovimientoFacade.getEntityManager().createQuery("UPDATE Movimiento m set m.estado = 2 where m.estado = 1");
-            queryActualizacion.executeUpdate();
-            
-            ut.commit();
-            
-            //Query queryActualizacion = ejbMovimientoFacade.getEntityManager().createQuery("UPDATE Movimiento m set m.estado = 2 where m.estado = 1");
-            //int executeUpdate = queryActualizacion.executeUpdate();
-            
-            return jsonArray.toString();
-
-            }catch(JSONException e){
-                return e.getMessage();
-            }
-    }
-    
-    @Path("/estado/{estado}")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public String findByEstado(@PathParam("estado") int estado) throws JSONException{
-        try{
-            Query query = ejbMovimientoFacade.getEntityManager().createQuery("SELECT c from Movimiento c WHERE c.estado = "+estado +" order by c.fechaHora DESC");
-            List<Movimiento> listMov = query.getResultList();
-            
-            JSONObject jsonArray = new JSONObject();
-            JSONObject jsonElement;
-            String movString;
-            
-            for(Movimiento unMov : listMov){
-                jsonElement = new JSONObject()
-                        .put("idMovimiento", unMov.getIdMovimiento())
-                        .put("idCuentaOrigen", unMov.getIdCuentaOrigen())
-                        .put("idCuentaDestino", unMov.getIdCuentaDestino())
-                        .put("importe", unMov.getImporte())
-                        .put("fechaHora", unMov.getFechaHora())
-                        .put("estado", unMov.getEstado())
-                        ;
-                jsonArray.put(String.valueOf(unMov.getIdMovimiento()),jsonElement);
-            }
-            
-            return jsonArray.toString();
-
-        }catch(JSONException e){
-            return e.getMessage();
-        }
-    }
-    
     @POST
     @Path("/realizar")
-    @Produces({MediaType.TEXT_PLAIN})
     @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.TEXT_PLAIN})
     public String registrarMovimiento(String peticionInicial) throws JSONException{
         JSONObject jsonPeticion = new JSONObject(peticionInicial);
         int cuenta_origen = jsonPeticion.getInt("cuenta_origen");
@@ -299,7 +179,7 @@ public class MovimientoRest {
                     }
                 }
                 return jsonDevolver.toString();
-            }catch(Exception e){
+            }catch(NumberFormatException | JSONException e){
                 jsonDevolver.put("flag_error", "1");
                 jsonDevolver.put("error", e.getMessage());
                 return jsonDevolver.toString();
@@ -310,5 +190,124 @@ public class MovimientoRest {
             jsonDevolver.put("error", "El importe no puede ser negativo");
             return jsonDevolver.toString();        }
     }
+    //actualizar entidades
+    @PUT
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path("/{id}")
+    public void edit(@PathParam("id")int id){
+        //Para cuando pasemos un movimiento de pendiente a realizado
+    }
+  
+    @Path("/ultimosMovimientos/{idCuenta}/{cantidad}")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String listaMovimientos(@PathParam("idCuenta") int idCuenta,@PathParam("cantidad") int cantidad) throws JSONException{
+        try{
+            Query query = ejbMovimientoFacade.getEntityManager().createQuery("SELECT c from Movimiento c WHERE c.idCuentaOrigen = "+idCuenta +" OR c.idCuentaDestino ="+idCuenta+" order by c.fechaHora DESC");
+            List<Movimiento> listMov = query.getResultList();
+            
+            JSONObject jsonArray = new JSONObject();
+            JSONObject jsonElement;
+            String movString;
+            
+            for(Movimiento unMov : listMov){
+                jsonElement = new JSONObject()
+                        .put("idMovimiento", unMov.getIdMovimiento())
+                        .put("idCuentaOrigen", unMov.getIdCuentaOrigen())
+                        .put("idCuentaDestino", unMov.getIdCuentaDestino())
+                        .put("importe", unMov.getImporte())
+                        .put("fechaHora", unMov.getFechaHora())
+                        .put("estado", unMov.getEstado())
+                        ;
+                jsonArray.put(String.valueOf(unMov.getIdMovimiento()),jsonElement);
+            }
+            
+            return jsonArray.toString();
+
+        }catch(JSONException e){
+            return e.getMessage();
         }
+    }
+    
+    
+    @Path("/transferenciaspendientes")
+    @GET
+    @Produces({MediaType.TEXT_PLAIN})
+    public String transferenciaspendientes() throws JSONException, NotSupportedException, SystemException, RollbackException, IllegalStateException, HeuristicMixedException, HeuristicRollbackException {
+        
+        //Acomodar los campos del JSON que se envía a BC
+        //Identificar cada elemento de la lista y actualizarlo en la DB, preferentemente despues de enviarlos
+        
+        try{
+            Query query = ejbMovimientoFacade.getEntityManager().createQuery("SELECT c from Movimiento c WHERE c.estado = 1 order by c.fechaHora DESC");
+            List<Movimiento> listMov = query.getResultList();
+            
+            JSONObject jsonArray = new JSONObject();
+            JSONObject jsonElement;
+            String movString;
+            
+            for(Movimiento unMov : listMov){
+                jsonElement = new JSONObject()
+                        .put("idCuentaOrigen", unMov.getIdCuentaOrigen())
+                        .put("idCuentaDestino", unMov.getIdCuentaDestino())
+                        .put("importe", unMov.getImporte())
+                        .put("fechaInicio", unMov.getFechaHora())
+                        .put("fechaFin", "")
+                        .put("estado", "PENDIENTE")
+                        ;
+                jsonArray.put(String.valueOf(unMov.getIdMovimiento()),jsonElement);
+            }
+            
+            //Esto no anda
+            
+            ejbMovimientoFacade.getEntityManager().getTransaction().begin();
+            ejbMovimientoFacade.getEntityManager().joinTransaction();
+
+            Query queryActualizacion = ejbMovimientoFacade.getEntityManager().createQuery("UPDATE Movimiento m set m.estado = 2 where m.estado = 1");
+            queryActualizacion.executeUpdate();
+            
+            ejbMovimientoFacade.getEntityManager().getTransaction().commit();
+            
+            //Query queryActualizacion = ejbMovimientoFacade.getEntityManager().createQuery("UPDATE Movimiento m set m.estado = 2 where m.estado = 1");
+            //int executeUpdate = queryActualizacion.executeUpdate();
+            
+            return jsonArray.toString();
+
+            }catch(JSONException e){
+                return e.getMessage();
+            }
+    }
+    
+    @Path("/estado/{estado}")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String findByEstado(@PathParam("estado") int estado) throws JSONException{
+        try{
+            Query query = ejbMovimientoFacade.getEntityManager().createQuery("SELECT c from Movimiento c WHERE c.estado = "+estado +" order by c.fechaHora DESC");
+            List<Movimiento> listMov = query.getResultList();
+            
+            JSONObject jsonArray = new JSONObject();
+            JSONObject jsonElement;
+            String movString;
+            
+            for(Movimiento unMov : listMov){
+                jsonElement = new JSONObject()
+                        .put("idMovimiento", unMov.getIdMovimiento())
+                        .put("idCuentaOrigen", unMov.getIdCuentaOrigen())
+                        .put("idCuentaDestino", unMov.getIdCuentaDestino())
+                        .put("importe", unMov.getImporte())
+                        .put("fechaHora", unMov.getFechaHora())
+                        .put("estado", unMov.getEstado())
+                        ;
+                jsonArray.put(String.valueOf(unMov.getIdMovimiento()),jsonElement);
+            }
+            
+            return jsonArray.toString();
+
+        }catch(JSONException e){
+            return e.getMessage();
+        }
+    }
+
+}
     

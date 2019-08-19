@@ -112,7 +112,8 @@ and open the template in the editor.
             });
             
         });
-        $("#btnRealizar").click(function(){
+        $("#btnRealizar").click(function(e){
+            e.preventDefault();
             var idTipoMovimiento = 2;
             var idCuentaOrigen = $("#idCuentaOrigen").val();
             var idCuentaDestino = $("#idCuentaDestino").val();
@@ -135,26 +136,18 @@ and open the template in the editor.
             //realizo el ajax para registrar la transferencia
             if(flag_enviar){
                 $.ajax({
-                    url:"http://localhost:8080/tp2019/movimiento/realizar",
+                    url:"http://localhost:8080/tp2019/rest/movimiento/realizar",
                     type:"post",
                     async:"false",
+                    data:JSON.stringify({"cuenta_origen":idCuentaOrigen,"cuenta_destino":idCuentaDestino,"tipo_movimiento":idTipoMovimiento,"monto":monto}),
                     dataType:"json",
                     success:function(myJson){
+                        if(myJson.flag_error == "0"){
+                            alert("Registrado OK");
+                        }else{
+                            alert("Ocurrió un error: " + myJson.error);
+                        }
                         
-                        $.ajax({
-                            url:"http://localhost:8080/tp2019/rest/cuenta/listaCuentas/"+idCliente,
-                            type:"get",
-                            dataType:"json",
-                            success:function(jsonCuentas){
-                                $.each(jsonCuentas, function(key, val) {
-                                    let row = $("#optionModelo").clone();
-                                    row.html("Cuenta "+val.idCuenta+" : saldo $"+val.saldo);
-                                    row.attr("value",val.idCuenta);
-                                    row.attr("id","");
-                                    $("#selectCuenta").append(row);
-                                });
-                            }
-                        });
                     },
                     error:function(error){
                         alert("Se produjo un error");
