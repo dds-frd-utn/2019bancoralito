@@ -17,8 +17,19 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 
@@ -131,11 +142,13 @@ public class MovimientoRest {
             return e.getMessage();
         }
     }
-
+    
+    @Inject
+    UserTransaction ut;
     @Path("/transferenciaspendientes")
     @GET
     @Produces({MediaType.TEXT_PLAIN})
-    public String transferenciaspendientes() throws JSONException {
+    public String transferenciaspendientes() throws JSONException, NotSupportedException, SystemException, RollbackException, IllegalStateException, HeuristicMixedException, HeuristicRollbackException {
         
         //Acomodar los campos del JSON que se envía a BC
         //Identificar cada elemento de la lista y actualizarlo en la DB, preferentemente despues de enviarlos
@@ -161,14 +174,22 @@ public class MovimientoRest {
             }
             
             //Esto no anda
-            Query queryActualizacion = ejbMovimientoFacade.getEntityManager().createQuery("UPDATE Movimiento SET estado = 2 WHERE estado = 1");
-            int executeUpdate = queryActualizacion.executeUpdate();
-           
+            
+            ut.begin();
+            
+            Query queryActualizacion = ejbMovimientoFacade.getEntityManager().createQuery("UPDATE Movimiento m set m.estado = 2 where m.estado = 1");
+            queryActualizacion.executeUpdate();
+            
+            ut.commit();
+            
+            //Query queryActualizacion = ejbMovimientoFacade.getEntityManager().createQuery("UPDATE Movimiento m set m.estado = 2 where m.estado = 1");
+            //int executeUpdate = queryActualizacion.executeUpdate();
+            
             return jsonArray.toString();
 
             }catch(JSONException e){
                 return e.getMessage();
-        }
+            }
     }
     
     @Path("/estado/{estado}")
@@ -289,5 +310,5 @@ public class MovimientoRest {
             jsonDevolver.put("error", "El importe no puede ser negativo");
             return jsonDevolver.toString();        }
     }
-}
-
+        }
+    
