@@ -139,12 +139,12 @@
             <dd>POST</dd>
 
             <dt>URL:</dt>
-            <dd>URL: http://...urlbancoralito.../rest/cliente</dd>
+            <dd>http://...urlbancoralito.../rest/cliente</dd>
 
             <dt>Parámetro:</dt>
             <dd>{<br>
                 "du":[entero],<br>
-                "saldo":[float],<br>
+                "saldo":[entero],<br>
                 "usuario":"[string]",<br>
                 "contrasenia":"[string]",<br>
                 "email":"[string]"<br>
@@ -155,29 +155,96 @@
             <i>La misma también se puede realizar por interfaz de usuario desde el cajero electrónico del banco.</i>
         </p>
     </div>
-    <div class="tab-pane fade" id="list-info" role="tabpanel" aria-labelledby="list-info-list">Diríjase con método GET al URL http://localhost:8080/tp2019/rest/cuenta/{du} indicando du.
-        </div>
-      <div class="tab-pane fade" id="list-consultar" role="tabpanel" aria-labelledby="list-consultar-list">Para consultar los últimos 10 movimientos de una cuenta se debe consultar con un método GET al URL http://localhost:8080/tp2019/{idcuenta}/{cantidadMov}. El sistema devolverá la siguiente información por medio de un JSON:
+    <div class="tab-pane fade" id="list-info" role="tabpanel" aria-labelledby="list-info-list"><p>
+            Para consultar la información de una cuenta se debe enviar el siguiente request a nuestra API:
+        </p>
+        <dl>
+            <dt>Método:</dt>
+            <dd>GET</dd>
 
-        { “cuentaOrigen”,
-                “cuentaDestino”,
-                “tipo”,
-                “Importe”,
-                “Fecha”
-        }
+            <dt>URL:</dt>
+            <dd>http://...urlbancoralito.../rest/cuenta/{du}</dd>
+
+            <dt>Parámetro:</dt>
+            <dd>{<br>
+                "du":[entero]
+                }
+            </dd>
+        </dl>
+        <p>
         </div>
-              <div class="tab-pane fade" id="list-cuentas" role="tabpanel" aria-labelledby="list-cuentas-list">Para conocer todas las cuentas que tiene un cliente utilice el método GET http://localhost:8080/tp2019/rest/cuenta/listaCuentas/{du} indicando el du del cliente.
+      <div class="tab-pane fade" id="list-consultar" role="tabpanel" aria-labelledby="list-consultar-list"><p>
+            Para consultar los últimos movimientos de una cuenta se debe enviar el siguiente request a nuestra API:
+        </p>
+        <dl>
+            <dt>Método:</dt>
+            <dd>GET</dd>
+
+            <dt>URL:</dt>
+            <dd>http://...urlbancoralito.../{idcuenta}/{cantidadMov}<dd>
+
+            <dt>Parámetro:</dt>
+            <dd>{<br>
+                "cantidadMov":[entero],<br>
+                "idcuenta":[entero]
+                }
+            </dd>
+        </dl>
+        <p>
         </div>
-              <div class="tab-pane fade" id="list-transferencia" role="tabpanel" aria-labelledby="list-transferencia-list">Para poder realizar una transferencia se debe enviar por POST un JSON a http://localhost:8080/tp2019/rest/movimiento. El JSON debe ser del formato:
-        {
-          “idTipoMovimiento”: 2=Transferencia | 3 = compra-venta (automático),
-                  "cuentaOrigen": "ID DE LA CUENTA DEL QUE TRANSFIERE", 
-          "cuentaDestino": "ID DE LA CUENTA DESTINO",
-          “importe”: IMPORTE A TRASNFERIR,
-          "fechaInicio": "FECHA INICIO TRANSFERENCIA", (AUTOMÁTICO)
-        }
+              <div class="tab-pane fade" id="list-cuentas" role="tabpanel" aria-labelledby="list-cuentas-list"><p>
+            Para conocer todas las cuentas que tiene un cliente se debe enviar el siguiente request a nuestra API:
+        </p>
+        <dl>
+            <dt>Método:</dt>
+            <dd>GET</dd>
+
+            <dt>URL:</dt>
+            <dd>http://...urlbancoralito.../rest/cuenta/listaCuentas/{du}<dd>
+
+            <dt>Parámetro:</dt>
+            <dd>{<br>
+                "du":[entero]
+                }
+            </dd>
+        </dl>
+        <p>
         </div>
-              <div class="tab-pane fade" id="list-tpendiente" role="tabpanel" aria-labelledby="list-tpendiente-list">Para que el banco Central pueda consultar las transferencias pendientes de envío a otros bancos invoca el método GET en http://localhost:8080/tp2019/rest/movimiento/transferenciaspendientes y recibirá listado de las transferencias que es necesario distribuir en los correspondientes bancos. Además las actualizará en la base de datos como enviadas.
+              <div class="tab-pane fade" id="list-transferencia" role="tabpanel" aria-labelledby="list-transferencia-list"><p>
+            Para poder realizar una transferencia se debe enviar el siguiente request a nuestra API:
+        </p>
+        <dl>
+            <dt>Método:</dt>
+            <dd>POST</dd>
+
+            <dt>URL:</dt>
+            <dd>http://...urlbancoralito.../rest/movimiento<dd>
+
+            <dt>Parámetro:</dt>
+            <dd>{<br>
+                "idTipoMovimiento":[entero],<br>
+                "cuentaOrigen":[entero],<br>
+                "cuentaDestino":"[entero]",<br>
+                "importe":"[entero]",<br>
+                "fecha":"[date]"<br>
+                }
+            </dd>
+        </dl>
+        <p>
+        </div>
+              <div class="tab-pane fade" id="list-tpendiente" role="tabpanel" aria-labelledby="list-tpendiente-list"><p>
+            Para que el banco Central pueda consultar las transferencias pendientes de envío a otros bancos se debe enviar el siguiente request a nuestra API:
+        </p>
+        <dl>
+            <dt>Método:</dt>
+            <dd>GET</dd>
+
+            <dt>URL:</dt>
+            <dd>http://...urlbancoralito.../rest/movimiento/transferenciaspendientes<dd>
+
+            
+        </dl>
+        <p>
         </div>
     </div>
   </div>
