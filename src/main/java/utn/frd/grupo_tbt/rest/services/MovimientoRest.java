@@ -160,6 +160,7 @@ public class MovimientoRest {
                 jsonArray.put(String.valueOf(unMov.getIdMovimiento()),jsonElement);
             }
             
+            //Esto no anda
             Query queryActualizacion = ejbMovimientoFacade.getEntityManager().createQuery("UPDATE Movimiento SET estado = 2 WHERE estado = 1");
             int executeUpdate = queryActualizacion.executeUpdate();
            
