@@ -163,11 +163,11 @@
             <dd>GET</dd>
 
             <dt>URL:</dt>
-            <dd>http://...urlbancoralito.../rest/cuenta/{du}</dd>
+            <dd>http://...urlbancoralito.../rest/cuenta/{idCuenta}</dd>
 
             <dt>Parámetro:</dt>
             <dd>{<br>
-                "du":[entero]
+                "idCuenta":[entero]<br>
                 }
             </dd>
         </dl>
@@ -186,7 +186,7 @@
             <dt>Parámetro:</dt>
             <dd>{<br>
                 "cantidadMov":[entero],<br>
-                "idcuenta":[entero]
+                "idcuenta":[entero]<br>
                 }
             </dd>
         </dl>
@@ -204,7 +204,7 @@
 
             <dt>Parámetro:</dt>
             <dd>{<br>
-                "du":[entero]
+                "du":[entero]<br>
                 }
             </dd>
         </dl>
@@ -222,11 +222,10 @@
 
             <dt>Parámetro:</dt>
             <dd>{<br>
-                "idTipoMovimiento":[entero],<br>
-                "cuentaOrigen":[entero],<br>
-                "cuentaDestino":"[entero]",<br>
-                "importe":"[entero]",<br>
-                "fecha":"[date]"<br>
+                "tipo_movimiento":[entero],<br>
+                "cuenta_origen":[entero],<br>
+                "cuenta_destino":"[entero]",<br>
+                "monto":"[entero]"<br>
                 }
             </dd>
         </dl>
