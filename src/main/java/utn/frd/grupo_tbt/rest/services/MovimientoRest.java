@@ -119,18 +119,22 @@ public class MovimientoRest {
         String str = "";
         
         JSONObject jsonDevolver = new JSONObject();
+        String respuesta = "";
         if(monto > 0){
             try{
-                if(tipo_movimiento == 2 || tipo_movimiento == 1){
+                if(tipo_movimiento == 2 || tipo_movimiento == 3){
                     //Si es compra-venta, consulto el valor del impuesto
-                    if(tipo_movimiento == 2){
+                    JSONObject jsonParam = new JSONObject();
+                    if(tipo_movimiento == 3){
+                        String respuestaImpuesto = this.enviarHttpRequest("http://lsi.no-ip.org:8282/esferopolis/api/impuesto","GET",jsonParam);
+                        JSONArray jsonArray = new JSONArray(respuestaImpuesto);
                         
-                        String respuestaImpuesto = this.enviarHttpRequest("http://lsi.no-ip.org:8282/esferopolis/api/impuesto","GET",new JSONObject());
-                        porcImpuesto = Float.parseFloat((new JSONObject(respuestaImpuesto)).getString("porcentaje"));
+                        porcImpuesto = Float.parseFloat((jsonArray.getJSONObject(0)).getString("porcentaje"));
                         valorImpuesto = monto * porcImpuesto / 100;
-                    }   
+                    }
                     // Averiguo cual es el saldo actual de la cuenta origen.
-                    String respuesta = this.enviarHttpRequest("http://localhost:8080/tp2019/rest/cuenta/"+cuenta_origen,"GET",new JSONObject());
+                    respuesta = this.enviarHttpRequest("http://localhost:8080/tp2019/rest/cuenta/"+cuenta_origen,"GET",jsonParam);
+                    
                     float saldoDisponible = Float.parseFloat((new JSONObject(respuesta)).getString("saldo"));
                     
                     float importeFinal = monto + valorImpuesto;
@@ -149,8 +153,13 @@ public class MovimientoRest {
                             //realizo el movimiento
                             //constructor: public Movimiento(int idCuentaOrigen,int idCuentaDestino, Float importe, Date fechaHora, int idTipoMovimiento,int estado) 
                             //nota estado movimiento en nuestra db 1:pendiente 2:finalizada
-                            Movimiento mov = new Movimiento(cuenta_origen,cuenta_destino,importeFinal,date,tipo_movimiento,2);
+                            Movimiento mov = new Movimiento(cuenta_origen,cuenta_destino,monto,date,tipo_movimiento,2);
                             ejbMovimientoFacade.create(mov);
+                            if(valorImpuesto != 0){
+                                //tipo mov 5: impuesto, queda en estado 1 que es pendiente
+                                Movimiento movImpuesto = new Movimiento(cuenta_origen,cuenta_destino,valorImpuesto,date,5,1);
+                                ejbMovimientoFacade.create(movImpuesto);
+                            }
 
                             // envio el json con la transferencia al banco central.
                             JSONObject transferencia = new JSONObject();
@@ -177,8 +186,10 @@ public class MovimientoRest {
                         jsonDevolver.put("flag_error", "1");
                         jsonDevolver.put("error", "No tienen saldo suficiente para realizar la transacción.");
                     }
+    
                 }
                 return jsonDevolver.toString();
+
             }catch(NumberFormatException | JSONException e){
                 jsonDevolver.put("flag_error", "1");
                 jsonDevolver.put("error", e.getMessage());
@@ -188,7 +199,8 @@ public class MovimientoRest {
         }else{
             jsonDevolver.put("flag_error", "1");
             jsonDevolver.put("error", "El importe no puede ser negativo");
-            return jsonDevolver.toString();        }
+            return jsonDevolver.toString();        
+        }
     }
     //actualizar entidades
     @PUT
@@ -204,6 +216,7 @@ public class MovimientoRest {
     public String listaMovimientos(@PathParam("idCuenta") int idCuenta,@PathParam("cantidad") int cantidad) throws JSONException{
         try{
             Query query = ejbMovimientoFacade.getEntityManager().createQuery("SELECT c from Movimiento c WHERE c.idCuentaOrigen = "+idCuenta +" OR c.idCuentaDestino ="+idCuenta+" order by c.fechaHora DESC");
+            query.setMaxResults(cantidad);
             List<Movimiento> listMov = query.getResultList();
             
             JSONObject jsonArray = new JSONObject();

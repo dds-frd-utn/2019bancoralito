@@ -178,9 +178,9 @@ public class ClienteRest extends HttpServlet{
                     Cuando sergio devuelva el idCuenta, hacemos esto
                     String urlCrearCuenta = "http://lsi.no-ip.org:8282/esferopolis/api/cuenta";
                     String idCuenta = this.enviarHttpRequest(urlCrearCuenta,"POST",jsonCrearCuenta);
-                    //return jsonCrearCuenta.toString()+idCuenta;
+                    
                     */
-                    String idCuenta = "4";
+                    String idCuenta = "27";
                     
                     //luego crear cuenta en nuestro banco
                     Cuenta nuevaCuenta = new Cuenta(Integer.parseInt(idCuenta),1,idCliente);

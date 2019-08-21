@@ -57,20 +57,22 @@ and open the template in the editor.
                     $.ajax({
                         type: "POST",
                         url: "http://localhost:8080/tp2019/rest/cliente",
-                        data: {"du":du,"saldoInicial":saldoInicial,"usuario":usuario,"contrasenia":contrasenia,"email":email},
+                        data:JSON.stringify({"du":du,"saldo":saldoInicial,"usuario":usuario,"contrasenia":contrasenia,"email":email}),
+                        contentType:"application/json",
                         dataType: "json",
                         success: function(response){
-                            console.log(response.flag_error);
+                            if(response.flag_error == "0"){
+                                alert("Se ha creado exitosamente");
+                                location.href ="login.html";
+                            }else{
+                                alert("No se ha podido crear. " + response.mensaje);
+                            }
+                            console.log(response);
                         },
                         error:function(error){
                             console.log(error);
-                        },
-                        then:function(){
-                            alert("Enviado");
-                        }
-                        
-                    });                    
-                    alert("Datos enviados");
+                        } 
+                    });
                 } 
 
             }); 

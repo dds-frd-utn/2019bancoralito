@@ -41,7 +41,7 @@ and open the template in the editor.
     <body>
         <div class="header-cajero">
             <div class="row">
-                <h4>Realizar una transferencia</h4>
+                <h4>Realizar una compra</h4>
             </div>
             <div class="row">
                 <h4 id="titleUsuario">[Información adicional]</h4>
@@ -59,7 +59,7 @@ and open the template in the editor.
                         <!-- Icon -->
                       <div class="fadeIn first">
                         <!--<img src="" id="icon" alt="User Icon" />-->
-                        <h5>Realizar transferencia</h5>
+                        <h5>Realizar compra</h5>
                       </div>
 
                       <!-- Login Form -->
@@ -118,9 +118,8 @@ and open the template in the editor.
 
         $("#btnRealizar").click(function(e){
             e.preventDefault();
-            var idTipoMovimiento = 2;
+            var idTipoMovimiento = 3;
             var idCuentaOrigen = $("#selectCuenta option:selected").val();
-            console.log(idCuentaOrigen);
             var idCuentaDestino = $("#idCuentaDestino").val();
             var monto = $("#monto").val();
             let flag_enviar = true;
@@ -138,7 +137,7 @@ and open the template in the editor.
                 flag_enviar = false;
             }
             //si ninguna validación falló
-            //realizo el ajax para registrar la transferencia
+            //realizo el ajax para registrar la compra
             if(flag_enviar){
                 $.ajax({
                     url:"http://localhost:8080/tp2019/rest/movimiento/realizar",
