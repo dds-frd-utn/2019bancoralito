@@ -307,6 +307,20 @@ public class MovimientoRest {
             return e.getMessage();
         }
     }
+    
+    @PUT
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path("/transferenciaentrante")
+    public void recibirTransferencia(JSONObject jsonObject) throws JSONException{
+        Movimiento movimiento = new Movimiento();
+        movimiento.setIdCuentaOrigen(jsonObject.getInt("cuentaOrigen"));
+        movimiento.setIdCuentaDestino(jsonObject.getInt("cuentaDestino"));
+        movimiento.setImporte((Float) jsonObject.get("importe"));
+        movimiento.setFechaHora((Date) jsonObject.get("fechaInicio"));
+        movimiento.setIdTipoMovimiento(2);
+        movimiento.setEstado(2);
+        
+        ejbMovimientoFacade.create(movimiento);
+    }
 
 }
-    
