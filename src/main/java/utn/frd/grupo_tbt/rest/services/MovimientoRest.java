@@ -247,12 +247,9 @@ public class MovimientoRest {
     @GET
     @Produces({MediaType.TEXT_PLAIN})
     public String transferenciaspendientes() throws JSONException, NotSupportedException, SystemException, RollbackException, IllegalStateException, HeuristicMixedException, HeuristicRollbackException {
-        
-        //Acomodar los campos del JSON que se envía a BC
-        //Identificar cada elemento de la lista y actualizarlo en la DB, preferentemente despues de enviarlos
-        
+
         try{
-            Query query = ejbMovimientoFacade.getEntityManager().createQuery("SELECT c from Movimiento c WHERE c.estado = 1 order by c.fechaHora DESC");
+            Query query = ejbMovimientoFacade.getEntityManager().createQuery("SELECT c from Movimiento c WHERE c.estado = 1 and (c.idTipoMovimiento = 2 or c.idTipoMovimiento = 3)");
             List<Movimiento> listMov = query.getResultList();
             
             JSONObject jsonArray = new JSONObject();
@@ -269,26 +266,9 @@ public class MovimientoRest {
                         .put("estado", "PENDIENTE")
                         ;
                 unMov.setEstado(2);
+                ejbMovimientoFacade.edit(unMov);
                 jsonArray.put(String.valueOf(unMov.getIdMovimiento()),jsonElement);
-                edit(unMov.getIdMovimiento(), unMov);
             }
-            
-            //Esto no anda
-            
-            //http://localhost:8080/tp2019//rest/movimiento
-
-            
-                    
-            //ejbMovimientoFacade.getEntityManager().getTransaction().begin();
-            //ejbMovimientoFacade.getEntityManager().joinTransaction();
-
-            //Query queryActualizacion = ejbMovimientoFacade.getEntityManager().createQuery("UPDATE Movimiento m set m.estado = 2 where m.estado = 1");
-            //queryActualizacion.executeUpdate();
-            
-            //ejbMovimientoFacade.getEntityManager().getTransaction().commit();
-            
-            //Query queryActualizacion = ejbMovimientoFacade.getEntityManager().createQuery("UPDATE Movimiento m set m.estado = 2 where m.estado = 1");
-            //int executeUpdate = queryActualizacion.executeUpdate();
             
             return jsonArray.toString();
 
