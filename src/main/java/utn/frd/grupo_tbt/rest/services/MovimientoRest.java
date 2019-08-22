@@ -308,15 +308,23 @@ public class MovimientoRest {
         }
     }
     
-    @PUT
-    @Consumes({MediaType.APPLICATION_JSON})
     @Path("/transferenciaentrante")
-    public void recibirTransferencia(JSONObject jsonObject) throws JSONException{
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    public void recibirTransferencia(String transferencia) throws JSONException{
+        
+        JSONObject jsonTransferencia = new JSONObject(transferencia);
+    
+            int cuentaOrigen = jsonTransferencia.getInt("cuentaOrigen");
+            int cuentaDestino = jsonTransferencia.getInt("cuentaDestino");
+            float importe = (Float) jsonTransferencia.get("importe");
+            Date fechaHora = (Date) jsonTransferencia.get("fechaInicio");
+        
         Movimiento movimiento = new Movimiento();
-        movimiento.setIdCuentaOrigen(jsonObject.getInt("cuentaOrigen"));
-        movimiento.setIdCuentaDestino(jsonObject.getInt("cuentaDestino"));
-        movimiento.setImporte((Float) jsonObject.get("importe"));
-        movimiento.setFechaHora((Date) jsonObject.get("fechaInicio"));
+        movimiento.setIdCuentaOrigen(cuentaOrigen);
+        movimiento.setIdCuentaDestino(cuentaDestino);
+        movimiento.setImporte(importe);
+        movimiento.setFechaHora(fechaHora);
         movimiento.setIdTipoMovimiento(2);
         movimiento.setEstado(2);
         
