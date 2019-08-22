@@ -187,6 +187,23 @@ public class MovimientoRest {
                         jsonDevolver.put("error", "No tienen saldo suficiente para realizar la transacción.");
                     }
     
+                }else if(tipo_movimiento == 4){
+                    //4: compra de bono
+                    // Averiguo cual es el saldo actual de la cuenta origen.
+                    respuesta = this.enviarHttpRequest("http://localhost:8080/tp2019/rest/cuenta/"+cuenta_origen,"GET",new JSONObject());
+                    
+                    float saldoDisponible = Float.parseFloat((new JSONObject(respuesta)).getString("saldo"));
+                    if (saldoDisponible >= 50){
+                        Date date = new Date();
+
+                        Movimiento mov = new Movimiento(cuenta_origen,cuenta_destino,monto,date,tipo_movimiento,1);
+                        ejbMovimientoFacade.create(mov);
+                        jsonDevolver.put("flag_error", "0");
+                        jsonDevolver.put("mensaje", "Ok");
+                    }else{
+                     jsonDevolver.put("flag_error", "1");
+                        jsonDevolver.put("error", "No tienen saldo suficiente para realizar la transacción.");
+                    }
                 }
                 return jsonDevolver.toString();
 

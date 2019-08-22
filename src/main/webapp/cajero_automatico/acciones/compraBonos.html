@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>CAJERO AUTOMATICO BANCO RALITO</title>
+        <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+        <meta charset="UTF-8">
+        <link href="../css/all.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="../css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link href="../css/login.css" rel="stylesheet" id="bootstrap-css">
+        <script src="../jquery/jquery.js"></script>
+
+        
+        <style> 
+            header{
+                height: 4em;
+            }
+            label{
+                opacity: initial;
+                color: black;
+            }
+            #selectCuenta, .inputEditados{
+                width: 85%;
+                display:inline-block;
+                margin: 15px 32px;
+            }
+            label{
+                margin: 0% 10%;
+                display:  flex;
+            }
+            .error{
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header-cajero">
+            <div class="row">
+                <h4>Realizar una compra de bono</h4>
+            </div>
+            <div class="row">
+                <h4 id="titleUsuario">[Información adicional]</h4>
+            </div>
+            <div class="row">
+                <h4><a href="../main.html">Inicio</a></h4>
+            </div>
+        </div>
+        <br>
+        <div class="container">
+            <div class="wrapper">
+                <div id="formContent">
+                  <!-- Tabs Titles -->
+
+                        <!-- Icon -->
+                      <div class="fadeIn first">
+                        <!--<img src="" id="icon" alt="User Icon" />-->
+                        <h5>Bonos disponibles</h5>
+                      </div>
+
+                      <!-- Login Form -->
+                      <form>
+                            <div class="fadeIn first">
+                                <label>Seleccione su cuenta</label>
+                            <select  name="idCuenta" id="selectCuenta" class="form-control">
+                                <option value="-1" id="optionModelo"></option>
+                            </select>
+                            </div>
+                            <label id="errorCuentaOrigen" class="error"></label>
+                            
+                            
+                            <table>
+                                <tr>
+                                    <td>
+                                        <input type="radio" name="bono1" id="bono1" class="fadeIn second form-control inputEditados">
+                                    </td>
+                                    <td>
+                                        <label>Bono de primera serie<br>
+                                            Valor: $50<br>
+                                            Ganancia: 3% <br>
+                                            Fecha de cobro:2019-06-01<br>
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="radio" name="bono2" id="bono2" class="fadeIn second form-control inputEditados">
+                                    </td>
+                                    <td>
+                                        <label>Bono de segunda serie<br>
+                                            Valor: $50<br>
+                                            Ganancia: 5% <br>
+                                            Fecha de cobro:2019-07-01<br>
+                                        </label>
+                                    </td>
+                                </tr>
+                            </table>
+                            <label id="errorBonos" class="error"></label>
+
+                            <input type="submit" id="btnRealizar" class="fadeIn fourth" value="Realizar compra">
+                      </form>
+                </div>
+            </div>
+        </div>
+    <script src="../js/printNombre.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.ajax({
+                url:"http://localhost:8080/tp2019/VerSession",
+                type:"get",
+                async:"false",
+                dataType:"json",
+                success:function(myJson){
+                    let idCliente = myJson.idCliente;
+                    $.ajax({
+                        url:"http://localhost:8080/tp2019/rest/cuenta/listaCuentas/"+idCliente,
+                        type:"get",
+                        dataType:"json",
+                        success:function(jsonCuentas){
+                            $.each(jsonCuentas, function(key, val) {
+                                let row = $("#optionModelo").clone();
+                                row.html("Cuenta "+val.idCuenta+" : saldo $"+val.saldo);
+                                row.attr("value",val.idCuenta);
+                                row.attr("id","");
+                                $("#selectCuenta").append(row);
+                            });
+                        }
+                    });
+                },
+                error:function(error){
+                    alert("Se produjo un error");
+                    console.log(error);
+                }
+            });
+            
+        });
+
+        $("#btnRealizar").click(function(e){
+            e.preventDefault();
+            var idCuentaOrigen = $("#selectCuenta option:selected").val();
+            let flag_enviar = true;
+            //validaciones
+            if(idCuentaOrigen == '-1'){
+                $("#errorCuentaOrigen").html("Debe seleccionar la cuenta de origen");
+                flag_enviar = false;
+            }
+            if($("#bono1").prop("checked") == false && $("#bono2").prop("checked") == false){
+                $("#errorBonos").html("Debe seleccionar un bono");
+                flag_enviar = false;
+            }
+
+            //si ninguna validación falló
+            //realizo el ajax para registrar la transferencia
+            let codigo ="";
+            if(flag_enviar){
+                if($("#bono1").prop("checked")){
+                    codigo= "ESF01";
+                }else{
+                    codigo="ESF02";
+                }
+                $.ajax({
+                    url:"http://lsi.no-ip.org:8282/esferopolis/api/bono/",
+                    type:"post",
+                    async:"false",
+                    data:JSON.stringify({"idInversiones":codigo,"idBanco":16,"montoInvertido":50}),
+                    contentType:"application/json",
+                    dataType:"json",
+                    success:function(myJson){
+                            $.ajax({
+                                url:"http://localhost:8080/tp2019/rest/movimiento/realizar",
+                                type:"post",
+                                async:"false",
+                                data:JSON.stringify({"cuenta_origen":idCuentaOrigen,"cuenta_destino":0,"tipo_movimiento":4,"monto":50}),
+                                contentType:"application/json",
+                                dataType:"json",
+                                success:function(myJson){
+                                    if(myJson.flag_error == "0"){
+                                        alert("Registrado OK");
+                                        location.reload();
+                                    }else{
+                                        alert("Ocurrió un error: " + myJson.error);
+                                        location.reload();
+                                    }
+                                },
+                                error:function(error){
+                                    alert("Se produjo un error");
+                                    console.log(error);
+                                }
+                            });
+                    },
+                    error:function(error){
+                        alert("Se produjo un error");
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    </script>
+    </body>
+</html>
