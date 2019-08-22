@@ -139,7 +139,7 @@
             <dd>POST</dd>
 
             <dt>URL:</dt>
-            <dd>http://...urlbancoralito.../rest/cliente</dd>
+            <dd>http://...urlbancoralito.../cliente</dd>
 
             <dt>Parámetro:</dt>
             <dd>{<br>
@@ -148,6 +148,12 @@
                 "usuario":"[string]",<br>
                 "contrasenia":"[string]",<br>
                 "email":"[string]"<br>
+                }
+            </dd>
+            <dt>Respuesta:</dt>
+            <dd>{<br>
+                "flag_error":[entero],<br>
+                "mensaje":[string],<br>
                 }
             </dd>
         </dl>
@@ -163,11 +169,19 @@
             <dd>GET</dd>
 
             <dt>URL:</dt>
-            <dd>http://...urlbancoralito.../rest/cuenta/{idCuenta}</dd>
+            <dd>http://...urlbancoralito.../cuenta/{idCuenta}</dd>
 
             <dt>Parámetro:</dt>
             <dd>{<br>
                 "idCuenta":[entero]<br>
+                }
+            </dd>
+            <dt>Respuesta:</dt>
+            <dd>{<br>
+                "flag_error":[entero],<br>
+                "idCuenta":[entero],<br>
+                "idCliente":[entero],<br>
+                "saldo":[entero],<br>
                 }
             </dd>
         </dl>
@@ -181,12 +195,22 @@
             <dd>GET</dd>
 
             <dt>URL:</dt>
-            <dd>http://...urlbancoralito.../{idcuenta}/{cantidadMov}<dd>
+            <dd>http://...urlbancoralito.../movimiento/ultimosMovimientos/{idcuenta}/{cantidadMov}<dd>
 
             <dt>Parámetro:</dt>
             <dd>{<br>
                 "cantidadMov":[entero],<br>
                 "idcuenta":[entero]<br>
+                }
+            </dd>
+            <dt>Respuesta:</dt>
+            <dd>{<br>
+                "idMovimiento":[entero],<br>
+                "idCuentaOrigen":[entero],<br>
+                "idCuentaDestino":[entero],<br>
+                "importe":[entero],<br>
+                "fechaHora":[yyyy-MM-dd'T'HH:mm:ss'Z'],<br>
+                "estado":[entero],<br>
                 }
             </dd>
         </dl>
@@ -200,11 +224,17 @@
             <dd>GET</dd>
 
             <dt>URL:</dt>
-            <dd>http://...urlbancoralito.../rest/cuenta/listaCuentas/{du}<dd>
+            <dd>http://...urlbancoralito.../cuenta/listaCuentas/{du}<dd>
 
             <dt>Parámetro:</dt>
             <dd>{<br>
                 "du":[entero]<br>
+                }
+            </dd>
+            <dt>Respuesta:</dt>
+            <dd>{<br>
+                "idCuenta":[entero],<br>
+                "cuenta":[JSON],<br>
                 }
             </dd>
         </dl>
@@ -218,7 +248,7 @@
             <dd>POST</dd>
 
             <dt>URL:</dt>
-            <dd>http://...urlbancoralito.../rest/movimiento<dd>
+            <dd>http://...urlbancoralito.../movimiento/realizar<dd>
 
             <dt>Parámetro:</dt>
             <dd>{<br>
@@ -226,6 +256,12 @@
                 "cuenta_origen":[entero],<br>
                 "cuenta_destino":"[entero]",<br>
                 "monto":"[entero]"<br>
+                }
+            </dd>
+            <dt>Respuesta:</dt>
+            <dd>{<br>
+                "flag_error":[entero],<br>
+                "mensaje":[string],<br>
                 }
             </dd>
         </dl>
@@ -237,10 +273,14 @@
         <dl>
             <dt>Método:</dt>
             <dd>GET</dd>
-
             <dt>URL:</dt>
-            <dd>http://...urlbancoralito.../rest/movimiento/transferenciaspendientes<dd>
-
+            <dd>http://...urlbancoralito.../movimiento/transferenciaspendientes<dd>
+            <dt>Respuesta:</dt>
+            <dd>{<br>
+                "idMovmiento":[entero],<br>
+                "movimiento":[JSON],<br>
+                }
+            </dd>
             
         </dl>
         <p>
