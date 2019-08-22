@@ -43,7 +43,7 @@ public class Movimiento implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "idMovimiento")
-    private Integer idMovimiento;
+    public Integer idMovimiento;
     @Column(name = "idCuentaOrigen")
     private Integer idCuentaOrigen;
     @Basic(optional = false)
@@ -162,5 +162,4 @@ public class Movimiento implements Serializable {
     public String toString() {
         return "utn.frd.grupo_tbt.entity.Movimiento[ idMovimiento=" + idMovimiento + " ]";
     }
-    
 }

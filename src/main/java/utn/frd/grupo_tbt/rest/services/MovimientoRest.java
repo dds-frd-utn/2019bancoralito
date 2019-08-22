@@ -206,10 +206,10 @@ public class MovimientoRest {
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("/{id}")
-    public void edit(@PathParam("id")int id){
-        //Para cuando pasemos un movimiento de pendiente a realizado
+    public void edit(@PathParam("id")long id, Movimiento movimiento){
+        ejbMovimientoFacade.edit(movimiento);
     }
-  
+   
     @Path("/ultimosMovimientos/{idCuenta}/{cantidad}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -268,18 +268,24 @@ public class MovimientoRest {
                         .put("fechaFin", "")
                         .put("estado", "PENDIENTE")
                         ;
+                unMov.setEstado(2);
                 jsonArray.put(String.valueOf(unMov.getIdMovimiento()),jsonElement);
+                edit(unMov.getIdMovimiento(), unMov);
             }
             
             //Esto no anda
             
-            ejbMovimientoFacade.getEntityManager().getTransaction().begin();
-            ejbMovimientoFacade.getEntityManager().joinTransaction();
+            //http://localhost:8080/tp2019//rest/movimiento
 
-            Query queryActualizacion = ejbMovimientoFacade.getEntityManager().createQuery("UPDATE Movimiento m set m.estado = 2 where m.estado = 1");
-            queryActualizacion.executeUpdate();
             
-            ejbMovimientoFacade.getEntityManager().getTransaction().commit();
+                    
+            //ejbMovimientoFacade.getEntityManager().getTransaction().begin();
+            //ejbMovimientoFacade.getEntityManager().joinTransaction();
+
+            //Query queryActualizacion = ejbMovimientoFacade.getEntityManager().createQuery("UPDATE Movimiento m set m.estado = 2 where m.estado = 1");
+            //queryActualizacion.executeUpdate();
+            
+            //ejbMovimientoFacade.getEntityManager().getTransaction().commit();
             
             //Query queryActualizacion = ejbMovimientoFacade.getEntityManager().createQuery("UPDATE Movimiento m set m.estado = 2 where m.estado = 1");
             //int executeUpdate = queryActualizacion.executeUpdate();
