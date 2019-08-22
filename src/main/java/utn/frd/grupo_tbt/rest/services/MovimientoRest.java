@@ -311,8 +311,9 @@ public class MovimientoRest {
     @Path("/transferenciaentrante")
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    public void recibirTransferencia(String transferencia) throws JSONException{
-        
+    public String recibirTransferencia(String transferencia) throws JSONException{
+    
+        try{
         JSONObject jsonTransferencia = new JSONObject(transferencia);
     
             int cuentaOrigen = jsonTransferencia.getInt("cuentaOrigen");
@@ -329,6 +330,9 @@ public class MovimientoRest {
         movimiento.setEstado(2);
         
         ejbMovimientoFacade.create(movimiento);
+    } catch(JSONException e){
+            return e.getMessage();
+        }
+        return null;
     }
-
 }
